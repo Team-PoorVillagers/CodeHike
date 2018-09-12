@@ -46,7 +46,7 @@ while(1):
 		break
 
 
-	time.sleep(6)
+	time.sleep(11)
 
 
 myFile = open('out.csv', 'a')
