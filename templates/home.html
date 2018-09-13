@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+{% extends 'base.html' %}
+
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">Codechef Virtual Contest</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+<!--       <li class="nav-item">
+        <a class="nav-link" href="#">Start here</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Current Leaderboard</a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" href="#">About Us</a>
+      </li>
+    </ul>   
+  </div>
+</nav>
+
+<div class="jumbotron">
+	<h1 class="display-4">Hello!!</h1>
+	<h2 class="display-5">Create a Virtual Contest</h2>
+	<p class="lead">It enable the users to run the past contests in a special mode that would imitate a real competition, currently supporting Cookoffs and LunchTime.</p>
+	<hr class="my-4">
+	<p>It uses Codechef APIs to get details about past contest and conduct it in virtual environment, giving feel as if it was hosting at real time. Try it now!</p>
+	<p class="lead">
+
+	<form class="form-inline">
+	  <div class="form-group mx-sm-3 mb-2">
+	    <label for="inputPassword2" class="sr-only">Enter a CookOff or LunchTime  Code</label>
+	    <input type="text" class="form-control" placeholder="eg. COOK95A, LTIME50" id="inputDefault">
+	    &nbsp;&nbsp;
+		<button type="submit" class="btn btn-primary">Submit</button>
+	  </div>
+	</form>
+    
+  <br>
+  <br>
+  <h4 class="display-8">When you take part in virtual contests please follow those simple rules:</h4>
+  <ul>
+  	<li>Don't participate if you've already seen the problems</li>
+  	<li>Don't participate if you only want to commit one problem or if you don't want/can't participate in the whole contest.</li>
+  	<li>During the contest don't read editorials, don't use somebody else's code, don't talk to other people</li>
+  	<li>Try to make it an efficient and enjoyable training!</li>
+  </ul>
+  <br>
+
+  <center>Made with ♥ by Hasan(@hasan356) and Vishva Nath(@vishvanath45)</center>
+  </p>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}
