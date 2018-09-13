@@ -25,8 +25,8 @@ def ranking(start_time , current_time):
 			if row[0]!="id":
 				total_names.add(row[3])
 				problems_list.add(row[4])
-		print(total_names)
-		print(problems_list)
+		# print(total_names)
+		# print(problems_list)
 		for name in total_names:
 			user = {}
 			user['name'] = name
