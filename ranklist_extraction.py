@@ -83,4 +83,39 @@ def ranking(start_time , current_time):
 		# for i in range(len_csv , 1, -1):
 		# 	print(readcsv['username'])
 
-ranking('2018-06-17 21:30:00' , '2018-06-17 23:59:00')
+def dashboard(start_time , current_time):
+	with open('out.csv') as csvfile:
+		readcsv = list(csv.reader(csvfile , delimiter = ','))
+		readcsv.reverse()
+		problems_list = set()
+		for row in readcsv:
+			if row[0]!="id":
+				problems_list.add(row[4])
+		submission = []
+		for val in problems_list:
+			p = {}
+			p['problem_name'] = val
+			p['correct'] = 0
+			p['total'] = 0
+			p['accuracy'] = 0
+			submission.append(p)
+		for row in readcsv:
+			fmt = '%Y-%m-%d %H:%M:%S'
+			tstamp1 = datetime.strptime(start_time, fmt)
+			tstamp2 = datetime.strptime(row[1], fmt)
+			p = tstamp2 - tstamp1
+			p = p.total_seconds()
+			tstamp1 = datetime.strptime(current_time, fmt)
+			tstamp2 = datetime.strptime(row[1], fmt)
+			if tstamp2 > tstamp1:
+				break
+			for i in range(0,len(submission)):
+				if submission[i]['problem_name'] == row[4]:
+					if row[6] == 'AC':
+						submission[i]['correct']+=1
+					submission[i]['total']+=1
+					submission[i]['accuracy'] = (submission[i]['correct']/submission[i]['total'])*100
+		json_file = json.dumps(submission , indent = 4)
+		print(json_file)
+# ranking('2018-06-17 21:30:00' , '2018-06-17 23:59:00')
+dashboard('2018-06-17 21:30:00' , '2018-06-17 21:45:00')

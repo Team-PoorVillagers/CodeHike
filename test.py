@@ -1,8 +1,9 @@
-import requests
+import requests	
 import json
 import pickle
 import csv
 import time 
+from cred
 def pretty(file):
 	return json.dumps(parse , indent = 4)
 
@@ -23,11 +24,11 @@ print(json.dumps(parsed, indent=4))
 	
 
 
-main_list = []
-heading = []
-flag = 0
+# main_list = []
+# heading = []
+# flag = 0
 	
-i = 1
+# i = 1
 # while(1):
 # 	print(i)
 # 	url = 'https://api.codechef.com/submissions/?contestCode=COOK95A&offset='+str(i)+'&limit=100'
@@ -57,7 +58,7 @@ i = 1
 # 	time.sleep(11)
 
 
-myFile = open('out.csv', 'a')
-with myFile:
-    writer = csv.writer(myFile)
-    writer.writerows(main_list)
+# myFile = open('out.csv', 'a')
+# with myFile:
+#     writer = csv.writer(myFile)
+#     writer.writerows(main_list)

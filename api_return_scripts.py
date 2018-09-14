@@ -92,3 +92,19 @@ def return_problem_details(contest_code, problem_code):
 		'body': data['result']['data']['content']['body'],
 	}
 	return obj
+
+
+
+def test():
+	url = 'https://api.codechef.com/ide/run'
+	data = {
+  		"sourceCode": "#include <iostream>\n int main() { std::cout << \"Hi!\"; return 0; }",
+  		"language": "C++ 4.3.2",
+  		"input": "1 2 3"
+	}
+	a = requests.post(url = url , data  = data)
+	parsed = a.json()
+	print(json.dumps(parsed, indent=4))	
+
+test()
+# activate_access_token()

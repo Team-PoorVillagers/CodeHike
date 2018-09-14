@@ -1,4 +1,6 @@
-from flask import Flask, render_template, jsonify
+from datetime import datetime
+
+from flask import Flask, render_template, jsonify 
 
 from api_return_scripts import *
 
@@ -47,6 +49,7 @@ def current_standing():
 	] 
 	return render_template("rankings.html", obj=obj)
 
+
 @app.route("/problem/<contest_code>/<problem_code>")
 def problem_details(contest_code, problem_code):
     print(contest_code, problem_code)
@@ -57,6 +60,18 @@ def problem_details(contest_code, problem_code):
     print(x)
     return render_template('problem.html', name = x['name'], timelimit = x['timelimit'], \
         sizelimit = x['sizelimit'], statement = x['body'])
+
+
+@app.route("/clock")
+def timer():
+    time_now = str(datetime.now())
+    time_now = time_now[:-7]
+    fmt = '%Y-%m-%d %H:%M:%S'
+    tstamp1 = datetime.strptime(time_now , fmt)
+    tstamp2 = datetime.strptime('2018-09-15 00:00:00', fmt)
+    p = tstamp2 - tstamp1
+    p = p.total_seconds()
+    return render_template("timer.html" , time = p)
 
 
 if __name__ == "__main__":
