@@ -1,0 +1,38 @@
+[
+    {
+        "problem_name": "GOODPERM",
+        "correct": 30,
+        "total": 43,
+        "accuracy": 69.76744186046511
+    },
+    {
+        "problem_name": "SONYASEG",
+        "correct": 2,
+        "total": 2,
+        "accuracy": 100.0
+    },
+    {
+        "problem_name": "NUMCOMP",
+        "correct": 0,
+        "total": 4,
+        "accuracy": 0.0
+    },
+    {
+        "problem_name": "DANYANUM",
+        "correct": 0,
+        "total": 0,
+        "accuracy": 0
+    },
+    {
+        "problem_name": "MINIONS",
+        "correct": 1,
+        "total": 16,
+        "accuracy": 6.25
+    },
+    {
+        "problem_name": "BTMNTREE",
+        "correct": 0,
+        "total": 0,
+        "accuracy": 0
+    }
+]
