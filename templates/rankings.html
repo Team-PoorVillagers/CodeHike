@@ -10,7 +10,7 @@
 
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
-  <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+  <!-- <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script> -->
 </head>
 
 <body>
@@ -19,10 +19,9 @@
 <table class ="table table-striped table-bordered table-hover" id="itemList">
     <thead>
         <tr>
-            <td>Name</td>
-            <td>Price</td>
-            <td>Quantity</td>
-            <td>Total</td>
+            <td>UserName</td>
+            <td>Total Score</td>
+            <td>Penalty</td>
         </tr>
     </thead>
     <tbody>
@@ -37,7 +36,7 @@ var obj = {{ obj|tojson}};
 for (var i = 0 ; i < obj.length ; i++)
 {
   var rows = "";
-  rows += "<tr><td>" +i+ "</td><td>" + obj[i]["name"] + "</td><td>" + obj[i]["Total Score"] + "</td><td>" + "pika" + "</td></tr>";
+  rows += "<tr><td>" +i+ "</td><td>" + obj[i]["name"] + "</td><td>" + obj[i]["Total Score"] + "</td><td>" + obj[i]["Penalty"] + "</td></tr>";
 
   $('#itemList').find('tbody').append(rows);
 }
