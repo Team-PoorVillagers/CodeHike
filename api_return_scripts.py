@@ -1,14 +1,27 @@
 import requests
 import json
-from current_access_refresh_token import access_token, refresh_token
+import datetime
 
-client_id = 'ef7441a4b097e998305fb63fe07ae8d1'
-client_secret = 'd90fe771ec547a6f0d5c9e75962969e6'
+from credentials import access_token, refresh_token, client_id, client_secret, generated_on
 
 headers = {
 	'content-type': 'application/json',
 	'Authorization': 'Bearer {}'.format(access_token)
 }
+
+def activate_access_token():
+	if(generated_on != ""):
+		fmt = '%Y-%m-%d %H:%M:%S.%f'
+		tstamp1 = datetime.datetime.strptime(generated_on, fmt)
+		tstamp2 = datetime.datetime.now()
+		diff = tstamp2 - tstamp1
+		# x = seconds since access token generated
+		x = diff.total_seconds()
+		# given access token expires in 3600 seconds, taking 3000 as limit 
+		if(int(x) > 3000):
+			get_access_token()
+	else:
+		get_access_token()
 
 def get_access_token():
 
@@ -26,16 +39,16 @@ def get_access_token():
         data=data,
     )
     response = response.json()
-    print(response)
+    generated_on = str(datetime.datetime.now())
 
-    with open('current_access_refresh_token.py', "w") as file:
+    with open('credentials.py', "w") as file:
     	file.write("access_token = '"+response['result']['data']['access_token']+"'\n")
-    	file.write("refresh_token = '"+response['result']['data']['refresh_token']+"'")
-    # print (response.json())	
+    	file.write("refresh_token = '"+response['result']['data']['refresh_token']+"'\n")
+    	file.write("client_id = '"+client_id+"'\n")
+    	file.write("client_secret = '"+client_secret+"'\n")
+    	file.write("generated_on = '"+generated_on+"'")
 
-    return 1
-
-print(get_access_token(client_id, client_secret, refresh_token))
+    return True
 
 def return_contest_details(contest_code):
 	"""
