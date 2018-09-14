@@ -29,31 +29,12 @@
 
 <div class="jumbotron">
 	
-  <h3>{{ name }}</h3>
-  <h5>Total Time(in mins) : {{ mins }}</h5>
+  <h5>{{ name }}</h5>
+  <h7>Time limit : {{ timelimit }}</h7>
+  <br>
+  <h7>Size limit : {{ sizelimit }}</h7>
+  {{ statement|safe }}
 
-<br>
-<br>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Problem Code</th>
-      <th scope="col">Successfull submission</th>
-      <th scope="col">Accuracy</th>
-      <!-- <th scope="col">Column heading</th> -->
-    </tr>
-  </thead>
-  <tbody>
-  {% for key in problems %}  
-    <tr class="table-light">
-    <th scope="row"><a href="/problem/{{ contest_code }}/{{ key }}">{{ key }}</a></th>
-    <td>200</td>
-    <td>20%</td>
-    <!-- <td>20%</td> -->
-    </tr>
-  {% endfor %} 
-  </tbody>
-</table> 
   <hr class="my-4">
   <center>Made with ♥ by Hasan(@hasan356) and Vishva Nath(@vishvanath45)</center>
   </p>

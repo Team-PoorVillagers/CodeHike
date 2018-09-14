@@ -61,12 +61,34 @@ def return_contest_details(contest_code):
 	Output:
 	A json variable with values.
 	"""
+	activate_access_token()
 	url = "https://api.codechef.com/contests/"+contest_code
 	data = requests.get(url=url,headers=headers)
 	data = data.json()
+	problems = []
+	for i in data['result']['data']['content']['problemsList']:
+		problems.append(i['problemCode'])
+	# print(problems)
 	obj = {
 		'name': data['result']['data']['content']['name'],
 		'start_date': data['result']['data']['content']['startDate'],
-		'end_date': data['result']['data']['content']['endDate']
+		'end_date': data['result']['data']['content']['endDate'],
+		'problems':problems
+	}
+	return obj
+
+
+def return_problem_details(contest_code, problem_code):
+	activate_access_token()
+	url = "https://api.codechef.com/contests/"+contest_code+"/problems/"+problem_code
+	# print(url)
+	data = requests.get(url=url,headers=headers)
+	data = data.json()
+	print(data)
+	obj = {
+		'name': data['result']['data']['content']['problemName'],
+		'timelimit': data['result']['data']['content']['maxTimeLimit'],
+		'sizelimit': data['result']['data']['content']['sourceSizeLimit'],
+		'body': data['result']['data']['content']['body'],
 	}
 	return obj
