@@ -1,8 +1,8 @@
-from datetime import datetime
+import datetime
 
 from flask import Flask, render_template, jsonify 
 
-from ranklist_extraction import ranking
+from ranklist_extraction import ranking,dashboard
 
 from api_return_scripts import *
 
@@ -25,11 +25,21 @@ def contest_page(contest_code):
     diff = e_d - s_d
     diff = diff.total_seconds()/60
 
-    return render_template("contestpage.html",contest_code = contest_code, name = x['name'], mins = diff, problems = x['problems'])
+    time_now = str(datetime.datetime.now())
+    time_now = time_now[:-7]
+    fmt = '%Y-%m-%d %H:%M:%S'
+    tstamp1 = datetime.datetime.strptime(time_now , fmt)
+    tstamp2 = datetime.datetime.strptime('2018-09-15 03:20:00', fmt)
+    p = tstamp2 - tstamp1
+    p = p.total_seconds()
+    print(p)
+    obj = dashboard('2018-06-17 21:30:00' , '2018-06-17 23:59:50')
+    # print(obj)
+    return render_template("contestpage.html",contest_code = contest_code, name = x['name'], mins = diff, problems = x['problems'] , obj = obj , time = p)
 
 @app.route("/standings")
 def current_standing():
-    obj = ranking('2018-06-17 21:30:00' , '2018-06-17 22:00:00')
+    obj = ranking('2018-06-17 21:30:00' , '2018-06-17 22:59:00')
     print(obj)
     return render_template("rankings.html", obj=obj)
 	# obj=[

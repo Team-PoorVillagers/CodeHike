@@ -2,7 +2,64 @@
 
 {% extends 'base.html' %}
 
+
+
 {% block header %}
+<script type="text/javascript">
+  
+  var timeleft = {{ time }}; 
+  var counter = 0
+  var startTime = 0;
+  var currentTime = 0;
+
+  console.log(timeleft)
+
+  function convertSeconds(s) {
+    var min = floor(s / 60);
+    var sec = s % 60;
+    return nf(min, 2) + ':' + nf(sec, 2);
+  }
+
+  // var ding;
+
+  // function preload() {
+  //   ding = loadSound("ding.mp3");
+  // }
+
+  function setup() {
+    var timer  = select('#timer');
+    // startTime = millis();
+
+     //   var params = getURLParams();
+     //   console.log(params);
+     //   if (params.minute) {
+     //     var min = params.minute;
+     //     timeleft = min * 60;
+     //   }
+        if (timeleft < 0)
+            timer.html("The contest ended");
+        else{
+        console.log(timer);
+        timer.html(convertSeconds(timeleft - counter));
+
+        // var interval = setInterval(timeIt, 1000);
+
+        function timeIt() {
+          counter++;
+          // currentTime = floor((millis() - startTime) / 1000);
+          timer.html(convertSeconds(timeleft - counter));
+          // if (currentTime == timeleft) {
+              // ding.play();
+              // clearInterval(interval);
+          //counter = 0;
+          // }
+      }
+      setInterval(timeIt , 1000)
+    }
+    } 
+</script>
+
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#">Codechef Virtual Contest</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +88,7 @@
 	
   <h3>{{ name }}</h3>
   <h5>Total Time(in mins) : {{ mins }}</h5>
-
+  <h5 id="timer"></script></h5>
 <br>
 <br>
 <table class="table table-hover">
@@ -44,11 +101,11 @@
     </tr>
   </thead>
   <tbody>
-  {% for key in problems %}  
+  {% for key in obj %}  
     <tr class="table-light">
-    <th scope="row"><a href="/problem/{{ contest_code }}/{{ key }}">{{ key }}</a></th>
-    <td>200</td>
-    <td>20%</td>
+    <th scope="row"><a href="/problem/{{ contest_code }}/{{ key }}">{{ key.problem_name }}</a></th>
+    <td>{{ key.correct }}</td>
+    <td>{{ key.accuracy }}</td>
     <!-- <td>20%</td> -->
     </tr>
   {% endfor %} 
@@ -61,6 +118,9 @@
 
 {% endblock %}
 
+
+
 {% block content %}
 
 {% endblock %}
+

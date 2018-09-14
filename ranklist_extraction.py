@@ -78,8 +78,7 @@ def ranking(start_time , current_time):
 		for val in current_rank_list:
 			for problem in problems_list:
 				val[problem+"Time"] = convert(val[problem+"Time"])
-		json_file = json.dumps(current_rank_list , indent = 4)
-		return json_file
+		return current_rank_list
 		# for i in range(len_csv , 1, -1):
 		# 	print(readcsv['username'])
 
@@ -114,8 +113,9 @@ def dashboard(start_time , current_time):
 					if row[6] == 'AC':
 						submission[i]['correct']+=1
 					submission[i]['total']+=1
-					submission[i]['accuracy'] = (submission[i]['correct']/submission[i]['total'])*100
-		json_file = json.dumps(submission , indent = 4)
+					submission[i]['accuracy'] = str(round((submission[i]['correct']/submission[i]['total'])*100 , 2))
+		# json_file = json.dumps(submission , indent = 4)
 		# print(json_file)
-# ranking('2018-06-17 21:30:00' , '2018-06-17 23:59:00')
-dashboard('2018-06-17 21:30:00' , '2018-06-17 21:45:00')
+		return submission
+ranking('2018-06-17 21:30:00' , '2018-06-17 21:37:00')
+# dashboard('2018-06-17 21:30:00' , '2018-06-17 21:45:00')

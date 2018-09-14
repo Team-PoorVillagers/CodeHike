@@ -106,5 +106,5 @@ def test():
 	parsed = a.json()
 	print(json.dumps(parsed, indent=4))	
 
-test()
-# activate_access_token()
+# test()
+activate_access_token()
