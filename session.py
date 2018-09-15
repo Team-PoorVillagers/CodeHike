@@ -1,5 +1,5 @@
 contest_code = 'COOK95A'
-v_contest_start_time = 'Sat Sep 15 2018 15:35:03 GMT+0530 (India Standard Time)'
+v_contest_start_time = '2018-09-15 15:43:02.841192'
 contest_start_time = '2018-06-17'
 contest_end_time = '2018-06-18'
 duration = '150.0'

@@ -53,7 +53,6 @@
     <input type="hidden" id='old_s_time' name='old_s_time' value={{ s_d }} />
     <input type="hidden" id='old_e_time' name='old_e_time' value={{ e_d }} />
     <input type="hidden" id='duration' name='duration' value={{ mins }} />
-		<input type="hidden" id='time' name='time' value="" />
     <button type="submit" class="btn btn-primary">Start contest!</button>
     </div>
   </form>
@@ -73,12 +72,6 @@
   </p>
 
 </div>
-
-<script type="text/javascript">
-  var today = new Date();
-  console.log(today);
-  document.getElementById('time').value = today;
-</script>
 {% endblock %}
 
 {% block content %}

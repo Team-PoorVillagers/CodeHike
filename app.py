@@ -85,7 +85,7 @@ def welcome_page():
 @app.route("/begin_contest", methods=['POST'])
 def begin_contest():
     contest_code = request.form['contestcode']
-    v_contest_start_time = request.form['time']
+    v_contest_start_time = str(datetime.datetime.now())
     contest_start_time = request.form['old_s_time']
     contest_end_time = request.form['old_e_time']
     duration = request.form['duration']
