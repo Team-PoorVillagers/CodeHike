@@ -79,8 +79,15 @@ def welcome_page():
     duration = e_d - s_d
     duration = duration.total_seconds()/60
 
+    with open('session.py', "w") as file:
+        file.write("problems = [ ")
+        for i in obj['problems']:
+            file.write(i)
+            file.write(" , ")
+        file.write(" ] \n")
+    file.close()
     return render_template("contest_welcome.html" ,contest_code = contest_code,\
-     name = obj['name'], mins = duration, s_d = s_d, e_d = e_d )
+     name = obj['name'], mins = duration, s_d = s_d, e_d = e_d  )
 
 @app.route("/begin_contest", methods=['POST'])
 def begin_contest():
@@ -90,7 +97,7 @@ def begin_contest():
     contest_end_time = request.form['old_e_time']
     duration = request.form['duration']
     
-    with open('session.py', "w") as file:
+    with open('session.py', "a") as file:
         file.write("contest_code = '"+contest_code+"'\n")
         file.write("v_contest_start_time = '"+v_contest_start_time+"'\n")
         file.write("contest_start_time = '"+contest_start_time+"'\n")
