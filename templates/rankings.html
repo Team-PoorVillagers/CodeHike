@@ -23,6 +23,9 @@
             <td>UserName</td>
             <td>Total Score</td>
             <td>Penalty</td>
+            {% for problem in problems %}
+                <td>{{ problem }}</td>
+            {% endfor %}
         </tr>
     </thead>
     <tbody>
@@ -34,11 +37,17 @@
 <script type="text/javascript">
   
 var obj = {{ obj|tojson }};
-for (var i = 0 ; i < obj.length ; i++)
+var problems = {{ problems|tojson }}
+// console.log(problems)
+for (var i = 1 ; i <= obj.length ; i++)
 {
   var rows = "";
-  rows += "<tr><td>" + i + "</td><td>" + obj[i]["name"] + "</td><td>" + obj[i]["Total Score"] + "</td><td>" + obj[i]["Penalty"] + "</td></tr>";
-
+  rows += "<tr><td>" + i + "</td><td>" + obj[i-1]["name"] + "</td><td>" + obj[i-1]["Total Score"] + "</td><td>" + obj[i-1]["Penalty"];
+  for(var j = 0 ; j < problems.length ;j++){
+    rows += "</td><td>"  + obj[i-1][problems[j]] ;
+    // console.log(nes_row)
+  }
+  rows+="</td></tr>"
   $('#itemList').find('tbody').append(rows);
 }
 // $(rows).appendTo("#itemList tbody");

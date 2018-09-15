@@ -58,9 +58,9 @@ def current_standing():
     v_contest_start_time = time_slice(v_contest_start_time)
     now = time_slice(datetime.datetime.now())
     print(v_contest_start_time , now)
-    obj = ranking(problems , v_contest_start_time , contest_start_time , now)
+    obj = ranking(problems , contest_start_time , v_contest_start_time , now)
     # print(obj)
-    return render_template("rankings.html", obj=obj)
+    return render_template("rankings.html", obj=obj , problems = problems)
 
 @app.route("/problem/<contest_code>/<problem_code>")
 def problem_details(contest_code, problem_code):

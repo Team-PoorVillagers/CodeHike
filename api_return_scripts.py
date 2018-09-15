@@ -97,12 +97,12 @@ def return_problem_details(contest_code, problem_code):
 
 
 def test():
-	url = 'https://api.codechef.com/submissions/?result=&year=&username=hasan_356&language=&problemCode=&contestCode=&fields='
+	url = 'https://api.codechef.com/users/me'
 	a = requests.get(url = url , headers  = headers)
 	parsed = a.json()
 	# for val in parsed['result']['data']['content']:
 		# print(val['result'] , val["date"] , val["problemCode"])
-	# print(json.dumps(parsed, indent=4))	
+	print(json.dumps(parsed, indent=4))	
 
 
 
