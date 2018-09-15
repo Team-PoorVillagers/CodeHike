@@ -4,6 +4,8 @@
 
 
 {% block header %}
+
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#">Codechef Virtual Contest</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,21 +31,32 @@
 </nav>
 
 <div class="jumbotron">
-	<h1 class="display-4">Hello!!</h1>
-	<h2 class="display-5">Create a Virtual Contest</h2>
-	<p class="lead">It enable the users to run the past contests in a special mode that would imitate a real competition, currently supporting Cookoffs and LunchTime.</p>
-	<hr class="my-4">
-	<p>It uses Codechef APIs to get details about past contest and conduct it in virtual environment, giving feel as if it was hosting at real time. Try it now!</p>
+	<h4 class="display-4">{{ name }}</h4>
+	<h5 class="display-5">{{ contest_code }}</h5>
+  Duration : {{ mins }} mins
+  <hr class="my-4">
+  Time Right now : 
+  <iframe src="http://free.timeanddate.com/clock/i6f07kp1/n1993/fn16/fs18/tct/pct/pa0/th1/ta1" frameborder="0" width="100" height="18" allowTransparency="true"></iframe>
+
+  <br>
+  <br>
+	<h6 class="display-6">Original contest details </h6>
+  <h6 class="display-6">Start Date : {{ s_d }} </h6>
+  <h6 class="display-6">End Date : {{ e_d }} </h6>
+
+
 	<p class="lead">
 
-	<form class="form-inline" action="/contest_welcome" method="GET">
-	  <div class="form-group mx-sm-3 mb-2">
-	    <label for="inputPassword2" class="sr-only">Enter a CookOff or LunchTime  Code</label>
-	    <input type="text" class="form-control" placeholder="eg. COOK95A, LTIME50" name="contestcode">
-	    &nbsp;&nbsp;
-		<button type="submit" class="btn btn-primary">Submit</button>
-	  </div>
-	</form>
+	<form class="form-inline" action="/begin_contest" method="post">
+    <div class="form-group mx-sm-3 mb-2">
+    <input type="hidden" id='contestcode' name = 'contestcode' value = {{ contest_code }} />
+    <input type="hidden" id='old_s_time' name='old_s_time' value={{ s_d }} />
+    <input type="hidden" id='old_e_time' name='old_e_time' value={{ e_d }} />
+    <input type="hidden" id='duration' name='duration' value={{ mins }} />
+		<input type="hidden" id='time' name='time' value="" />
+    <button type="submit" class="btn btn-primary">Start contest!</button>
+    </div>
+  </form>
     
   <br>
   <br>
@@ -58,9 +71,16 @@
 
   <center>Made with ♥ by Hasan(@hasan356) and Vishva Nath(@vishvanath45)</center>
   </p>
+
 </div>
+
+<script type="text/javascript">
+  var today = new Date();
+  console.log(today);
+  document.getElementById('time').value = today;
+</script>
 {% endblock %}
 
 {% block content %}
 
-{% endblock %}
+{% endblock %}  
