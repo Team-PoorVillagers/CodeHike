@@ -6,8 +6,12 @@ from ranklist_extraction import ranking,dashboard
 
 from api_return_scripts import *
 
+
 app = Flask(__name__)
 
+def time_slice(t):
+    t = str(t)
+    return t[:-7]
 
 @app.route("/")
 def main_page():
@@ -24,22 +28,38 @@ def contest_page(contest_code):
     diff = e_d - s_d
     diff = diff.total_seconds()/60
 
-    time_now = str(datetime.datetime.now())
-    time_now = time_now[:-7]
-    fmt = '%Y-%m-%d %H:%M:%S'
+    from session import problems,v_contest_start_time,contest_start_time,duration
+
+    time_now = time_slice(datetime.datetime.now())
+    # print("\n\n\n\n\n")
+    # print(time_now , v_contest_start_time)
+    v_contest_start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
+    end_time = v_contest_start_time + datetime.timedelta(minutes = int(float(duration)))
+    print(end_time)
+    # print(str(datetime.timedelta(minutes = 10)))
+    v_contest_start_time = time_slice(v_contest_start_time)
+    end_time = str(end_time)
+    end_time = end_time.split(".")[0]
+    print(time_now , end_time)
     tstamp1 = datetime.datetime.strptime(time_now , fmt)
-    tstamp2 = datetime.datetime.strptime('2018-09-15 03:20:00', fmt)
+    tstamp2 = datetime.datetime.strptime(end_time , fmt)
     p = tstamp2 - tstamp1
     p = p.total_seconds()
 
-    obj = dashboard('2018-06-17 21:30:00' , '2018-06-17 23:59:50')
+    obj = dashboard(problems  , contest_start_time , v_contest_start_time , time_now)
 
     return render_template("contestpage.html",contest_code = contest_code, name = x['name'], mins = diff, problems = x['problems'] , obj = obj , time = p)
 
 @app.route("/standings")
 def current_standing():
-    obj = ranking('2018-06-17 21:30:00' , '2018-06-17 22:59:00')
-    print(obj)
+    from session import problems,v_contest_start_time,contest_start_time,duration
+    fmt = '%Y-%m-%d %H:%M:%S'
+    v_contest_start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
+    v_contest_start_time = time_slice(v_contest_start_time)
+    now = time_slice(datetime.datetime.now())
+    print(v_contest_start_time , now)
+    obj = ranking(problems , v_contest_start_time , contest_start_time , now)
+    # print(obj)
     return render_template("rankings.html", obj=obj)
 
 @app.route("/problem/<contest_code>/<problem_code>")
@@ -54,16 +74,19 @@ def problem_details(contest_code, problem_code):
         sizelimit = x['sizelimit'], statement = x['body'])
 
 
-@app.route("/clock")
-def timer():
-    time_now = str(datetime.now())
-    time_now = time_now[:-7]
-    fmt = '%Y-%m-%d %H:%M:%S'
-    tstamp1 = datetime.strptime(time_now , fmt)
-    tstamp2 = datetime.strptime('2018-09-15 00:00:00', fmt)
-    p = tstamp2 - tstamp1
-    p = p.total_seconds()
-    return render_template("timer.html" , time = p)
+# @app.route("/clock")
+# def timer():
+#     from session import problems,v_contest_start_time,contest_start_time,duration
+#     time_now = time_slice(datetime.now())
+#     end_time = v_contest_start_time + datetime.timedelta(minutes = int(duration))
+#     end_time = time_slice(end_time)
+#     fmt = '%Y-%m-%d %H:%M:%S'
+#     tstamp1 = datetime.strptime(time_now , fmt)
+#     tstamp2 = datetime.strptime(end_time, fmt)
+#     print(tstamp1 , tstamp2)
+#     p = tstamp2 - tstamp1
+#     p = p.total_seconds()
+#     return render_template("timer.html" , time = p)
 
 @app.route("/contest_welcome", methods=['GET'])
 def welcome_page():
@@ -82,7 +105,7 @@ def welcome_page():
     with open('session.py', "w") as file:
         file.write("problems = [ ")
         for i in obj['problems']:
-            file.write(i)
+            file.write("'"+i+"'")
             file.write(" , ")
         file.write(" ] \n")
         file.write("contest_start_time = '"+str(s_d)+"'\n")

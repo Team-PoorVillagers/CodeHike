@@ -4,6 +4,12 @@ import operator
 import json
 from datetime import datetime
 
+def diff(t1 , t2):
+	fmt = '%Y-%m-%d %H:%M:%S'
+	tstamp1 = datetime.strptime(t1, fmt)
+	tstamp2 = datetime.strptime(t2, fmt)
+	p = tstamp2 - tstamp1
+	return p.total_seconds()
 def convert(t):
 	t = int(t)
 	hour = t//3600
@@ -12,7 +18,7 @@ def convert(t):
 	t%=60
 	sec = t
 	return str(hour)+":"+str(mint)+":"+str(sec)
-def ranking(start_time , current_time):
+def ranking(problems_list,original_start_time , start_time , current_time):
 	with open('out.csv') as csvfile:
 		ranks = {}
 		ranklist = []
@@ -20,11 +26,9 @@ def ranking(start_time , current_time):
 		readcsv = list(csv.reader(csvfile , delimiter = ','))
 		readcsv.reverse()
 		total_names = set()
-		problems_list = set()
 		for row in readcsv:
 			if row[0]!="id":
 				total_names.add(row[3])
-				problems_list.add(row[4])
 		# print(total_names)
 		# print(problems_list)
 		for name in total_names:
@@ -40,14 +44,12 @@ def ranking(start_time , current_time):
 			ranklist.append(user)
 		# print(ranklist)
 		for row in readcsv:
-			fmt = '%Y-%m-%d %H:%M:%S'
-			tstamp1 = datetime.strptime(start_time, fmt)
-			tstamp2 = datetime.strptime(row[1], fmt)
-			p = tstamp2 - tstamp1
-			p = p.total_seconds()
-			tstamp1 = datetime.strptime(current_time, fmt)
-			tstamp2 = datetime.strptime(row[1], fmt)
-			if tstamp2 > tstamp1:
+			if row[0] == 'id':
+				continue
+			# print(row)
+			time_diff1 = diff(start_time , current_time)
+			time_diff2 = diff(original_start_time , row[1])
+			if time_diff2 > time_diff1:
 				break
 			username = row[3]
 			for i in range(0,len(ranklist)):
@@ -55,7 +57,7 @@ def ranking(start_time , current_time):
 					ranklist[i]['entry'] = True
 					if row[6] == "AC" and ranklist[i][row[4]] <= 0:
 						ranklist[i][row[4]] = 1 + (ranklist[i][row[4]] * (-1))
-						ranklist[i][row[4]+"Time"] = p
+						ranklist[i][row[4]+"Time"] = time_diff2
 
 					elif ranklist[i][row[4]]<=0:
 						ranklist[i][row[4]]-=1
@@ -82,14 +84,10 @@ def ranking(start_time , current_time):
 		# for i in range(len_csv , 1, -1):
 		# 	print(readcsv['username'])
 
-def dashboard(start_time , current_time):
+def dashboard(problems_list, original_start_time , start_time , current_time):
 	with open('out.csv') as csvfile:
 		readcsv = list(csv.reader(csvfile , delimiter = ','))
 		readcsv.reverse()
-		problems_list = set()
-		for row in readcsv:
-			if row[0]!="id":
-				problems_list.add(row[4])
 		submission = []
 		for val in problems_list:
 			p = {}
@@ -99,14 +97,9 @@ def dashboard(start_time , current_time):
 			p['accuracy'] = 0
 			submission.append(p)
 		for row in readcsv:
-			fmt = '%Y-%m-%d %H:%M:%S'
-			tstamp1 = datetime.strptime(start_time, fmt)
-			tstamp2 = datetime.strptime(row[1], fmt)
-			p = tstamp2 - tstamp1
-			p = p.total_seconds()
-			tstamp1 = datetime.strptime(current_time, fmt)
-			tstamp2 = datetime.strptime(row[1], fmt)
-			if tstamp2 > tstamp1:
+			time_diff1 = diff(start_time , current_time)
+			time_diff2 = diff(original_start_time , row[1])
+			if time_diff2 > time_diff1:
 				break
 			for i in range(0,len(submission)):
 				if submission[i]['problem_name'] == row[4]:
@@ -117,5 +110,5 @@ def dashboard(start_time , current_time):
 		# json_file = json.dumps(submission , indent = 4)
 		# print(json_file)
 		return submission
-ranking('2018-06-17 21:30:00' , '2018-06-17 21:37:00')
+# ranking('2018-06-17 21:30:00' , '2018-06-17 21:37:00')
 # dashboard('2018-06-17 21:30:00' , '2018-06-17 21:45:00')

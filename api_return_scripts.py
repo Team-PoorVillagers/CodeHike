@@ -4,6 +4,8 @@ import datetime
 
 from credentials import access_token, refresh_token, client_id, client_secret, generated_on
 
+
+
 headers = {
 	'content-type': 'application/json',
 	'Authorization': 'Bearer {}'.format(access_token)
@@ -94,17 +96,16 @@ def return_problem_details(contest_code, problem_code):
 	return obj
 
 
-
 def test():
-	url = 'https://api.codechef.com/ide/run'
-	data = {
-  		"sourceCode": "#include <iostream>\n int main() { std::cout << \"Hi!\"; return 0; }",
-  		"language": "C++ 4.3.2",
-  		"input": "1 2 3"
-	}
-	a = requests.post(url = url , data  = data)
+	url = 'https://api.codechef.com/submissions/?result=&year=&username=hasan_356&language=&problemCode=&contestCode=&fields='
+	a = requests.get(url = url , headers  = headers)
 	parsed = a.json()
-	print(json.dumps(parsed, indent=4))	
+	# for val in parsed['result']['data']['content']:
+		# print(val['result'] , val["date"] , val["problemCode"])
+	# print(json.dumps(parsed, indent=4))	
+
+
+
 
 # test()
-activate_access_token()
+# activate_access_token()
