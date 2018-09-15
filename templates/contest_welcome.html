@@ -50,9 +50,6 @@
 	<form class="form-inline" action="/begin_contest" method="post">
     <div class="form-group mx-sm-3 mb-2">
     <input type="hidden" id='contestcode' name = 'contestcode' value = {{ contest_code }} />
-    <input type="hidden" id='old_s_time' name='old_s_time' value={{ s_d }} />
-    <input type="hidden" id='old_e_time' name='old_e_time' value={{ e_d }} />
-    <input type="hidden" id='duration' name='duration' value={{ mins }} />
     <button type="submit" class="btn btn-primary">Start contest!</button>
     </div>
   </form>

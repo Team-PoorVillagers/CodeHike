@@ -85,6 +85,9 @@ def welcome_page():
             file.write(i)
             file.write(" , ")
         file.write(" ] \n")
+        file.write("contest_start_time = '"+str(s_d)+"'\n")
+        file.write("contest_end_time = '"+str(e_d)+"'\n")
+        file.write("duration = '"+str(duration)+"'\n")
     file.close()
     return render_template("contest_welcome.html" ,contest_code = contest_code,\
      name = obj['name'], mins = duration, s_d = s_d, e_d = e_d  )
@@ -93,16 +96,11 @@ def welcome_page():
 def begin_contest():
     contest_code = request.form['contestcode']
     v_contest_start_time = str(datetime.datetime.now())
-    contest_start_time = request.form['old_s_time']
-    contest_end_time = request.form['old_e_time']
-    duration = request.form['duration']
     
     with open('session.py', "a") as file:
         file.write("contest_code = '"+contest_code+"'\n")
         file.write("v_contest_start_time = '"+v_contest_start_time+"'\n")
-        file.write("contest_start_time = '"+contest_start_time+"'\n")
-        file.write("contest_end_time = '"+contest_end_time+"'\n")
-        file.write("duration = '"+duration+"'")
+
 
     return redirect(url_for('contest_page',contest_code = contest_code))
 
