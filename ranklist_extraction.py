@@ -17,6 +17,7 @@ def convert(t):
 	t%=60
 	sec = t
 	return str(hour)+":"+str(mint)+":"+str(sec)
+
 def ranking(contest_code , problems_list , original_start_time , start_time , current_time):
 	link = '../COOKOFF-dataset/' + contest_code + '.csv'
 	with open(link) as csvfile:
@@ -89,6 +90,7 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 				val[problem+"Time"] = convert(val[problem+"Time"])
 		# print(current_rank_list)
 		return current_rank_list
+
 
 def dashboard(contest_code , problems_list, original_start_time , start_time , current_time):
 	link = '../COOKOFF-dataset/' + contest_code + '.csv'

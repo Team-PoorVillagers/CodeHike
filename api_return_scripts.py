@@ -1,20 +1,26 @@
 import requests
 import json
 import datetime
+
 import csv
-from credentials import access_token, refresh_token, client_id, client_secret, generated_on
+
+
+import credentials as cred_file
+
+from global_app_details import client_id, client_secret, redirect_uri
+
 
 
 
 headers = {
 	'content-type': 'application/json',
-	'Authorization': 'Bearer {}'.format(access_token)
+	'Authorization': 'Bearer {}'.format(cred_file.access_token)
 }
 
 def activate_access_token():
-	if(generated_on != ""):
+	if(cred_file.generated_on != ""):
 		fmt = '%Y-%m-%d %H:%M:%S.%f'
-		tstamp1 = datetime.datetime.strptime(generated_on, fmt)
+		tstamp1 = datetime.datetime.strptime(cred_file.generated_on, fmt)
 		tstamp2 = datetime.datetime.now()
 		diff = tstamp2 - tstamp1
 		# x = seconds since access token generated
@@ -27,30 +33,62 @@ def activate_access_token():
 
 def get_access_token():
 
-    url = 'https://api.codechef.com/oauth/token'
+	url = 'https://api.codechef.com/oauth/token'
 
-    data = {
-        'client_id': client_id,
-        'client_secret': client_secret,
-        'refresh_token': refresh_token,
-        'grant_type': 'refresh_token'
-    }
+	data = {
+		'client_id': client_id,
+		'client_secret': client_secret,
+		'refresh_token': cred_file.refresh_token,
+		'grant_type': 'refresh_token'
+	}
 
-    response = requests.post(
-        url=url,
-        data=data,
-    )
-    response = response.json()
-    generated_on = str(datetime.datetime.now())
+	response = requests.post(
+		url=url,
+		data=data,
+	)
+	response = response.json()
+	generated_on = str(datetime.datetime.now())
 
-    with open('credentials.py', "w") as file:
-    	file.write("access_token = '"+response['result']['data']['access_token']+"'\n")
-    	file.write("refresh_token = '"+response['result']['data']['refresh_token']+"'\n")
-    	file.write("client_id = '"+client_id+"'\n")
-    	file.write("client_secret = '"+client_secret+"'\n")
-    	file.write("generated_on = '"+generated_on+"'")
+	cred_file.access_token = response['result']['data']['access_token']
+	cred_file.refresh_token = response['result']['data']['refresh_token']
+	cred_file.generated_on = generated_on
 
-    return True
+	with open('credentials.py', "w+") as file:
+		file.write("access_token = '"+response['result']['data']['access_token']+"'\n")
+		file.write("refresh_token = '"+response['result']['data']['refresh_token']+"'\n")
+		file.write("generated_on = '"+generated_on+"'")
+	file.close()
+
+	return True
+
+
+def verify_login(auth_token):
+	url = 'https://api.codechef.com/oauth/token'
+	login_headers = {'content-Type': 'application/json',}
+	data = '{{"grant_type": "authorization_code","code": "{}","client_id":"{}","client_secret":"{}","redirect_uri":"{}"}}'.format(auth_token, client_id, client_secret, redirect_uri)
+	response = requests.post(url, headers=login_headers, data=data)
+	response = response.json()
+
+	print(response)
+	if(response['status'] != 'OK'):
+		return False
+	else:
+		access_token = response['result']['data']['access_token']
+		refresh_token = response['result']['data']['refresh_token']
+		generated_on = str(datetime.datetime.now())
+
+		a = "access_token = '"+str(access_token)+"'\n"
+		b = "refresh_token = '"+str(refresh_token)+"'\n"
+		c = "generated_on = '"+str(generated_on)+"'\n"
+		print(a, b, c )
+		with open('credentials.py', "w+") as file:
+			file.write(a)
+			file.write(b)
+			file.write(c)
+		file.close()
+		get_my_details()
+		return True
+
 
 def return_contest_details(contest_code):
 	"""
@@ -96,6 +134,7 @@ def return_problem_details(contest_code, problem_code):
 	return obj
 
 
+
 def test():
 	url = 'https://api.codechef.com/submissions/?result=&year=&username=&language=&problemCode=&contestCode=&fields='
 	a = requests.get(url = url , headers  = headers)
@@ -127,3 +166,26 @@ def test():
 
 # test()
 # activate_access_token()
+
+def get_my_details():
+	activate_access_token()
+	url = "https://api.codechef.com/users/me"
+	data = requests.get(url = url, headers = headers)
+	data = data.json()
+	username = data['result']['data']['content']['username']
+	with open('user_details.py', 'w') as f:
+		f.write("username = '"+username+"'\n")
+
+# get_my_details()
+
+# def test():
+# 	url = 'https://api.codechef.com/ide/run'
+# 	data = {
+#   		"sourceCode": "#include <iostream>\n int main() { std::cout << \"Hi!\"; return 0; }",
+#   		"language": "C++ 4.3.2",
+#   		"input": "1 2 3"
+# 	}
+# 	a = requests.post(url = url , data  = data)
+# 	parsed = a.json()
+# 	print(json.dumps(parsed, indent=4))	
+

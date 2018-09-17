@@ -1,11 +1,12 @@
 import datetime
 
-from flask import Flask, render_template, jsonify, request, redirect,  url_for
+from flask import Flask, render_template, jsonify, request, redirect,  url_for, flash, session, abort
 
 from ranklist_extraction import ranking,dashboard
 
 from api_return_scripts import *
 
+<<<<<<< Updated upstream
 
 app = Flask(__name__)
 
@@ -17,11 +18,44 @@ def time_slice(t):
 def main_page():
 
     return render_template("home.html")
+=======
+from global_app_details import *
+
+app = Flask(__name__)
+
+get_access_token()
+
+
+@app.route("/")
+def main_page():
+    if not session.get('logged_in'):
+        # For testing 
+        # redirect_uri = "https://www.google.com"
+        return render_template("home-no-login.html", client_id = client_id, redirect_uri = redirect_uri)
+    else:
+        return render_template("home.html")
+
+
+@app.route('/auth', methods=['GET'])
+def do_login():
+    auth_token = request.args.get("code")
+    x = verify_login(auth_token)
+    if (x == True):
+        session['logged_in'] = True
+    else:
+        flash('wrong password!')
+    return main_page()
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return main_page()
+
+>>>>>>> Stashed changes
 
 @app.route("/contestpage/<contest_code>")
 def contest_page(contest_code):
     x = return_contest_details(contest_code)
-    # print(x)
     # x = {'name': 'January Cook-Off 2018', 'start_date': '2018-01-21 21:30:00', 'end_date': '2018-01-22 00:00:00', 'problems': ['FINDA', 'MAGA', 'MULTHREE', 'FARGRAPH', 'SURVIVE']}
     fmt = '%Y-%m-%d %H:%M:%S'
     s_d = datetime.datetime.strptime(x['start_date'], fmt)
@@ -52,6 +86,7 @@ def contest_page(contest_code):
 
 @app.route("/standings")
 def current_standing():
+<<<<<<< Updated upstream
     from session import problems,v_contest_start_time,contest_start_time,duration,contest_code
     fmt = '%Y-%m-%d %H:%M:%S'
     v_contest_start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
@@ -61,17 +96,21 @@ def current_standing():
     obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , now)
     # print(obj)
     return render_template("rankings.html", obj=obj , problems = problems)
+=======
+    obj = ranking('2018-06-17 21:30:00' , '2018-06-17 22:59:00')
+    # obj = ranking('2018-06-17 21:30:00' , '2018-06-17 22:00:00')
+    # obj = json.loads(obj)
+
+    print(obj)
+    return render_template("rankings.html", obj=obj)
+>>>>>>> Stashed changes
 
 @app.route("/problem/<contest_code>/<problem_code>")
 def problem_details(contest_code, problem_code):
-    print(contest_code, problem_code)
-    # return render_template("home.html")
-
-    print("api called ")
     x = return_problem_details(contest_code, problem_code)
     print(x)
     return render_template('problem.html', name = x['name'], timelimit = x['timelimit'], \
-        sizelimit = x['sizelimit'], statement = x['body'])
+        sizelimit = x['sizelimit'], statement = x['body'], contest_code = contest_code)
 
 
 # @app.route("/clock")
@@ -129,5 +168,13 @@ def begin_contest():
 
 
 
+
+
 if __name__ == "__main__":
-	app.run(debug=True)
+    app.secret_key = "this is super secret"
+    app.run(debug=True)
+
+
+@app.context_processor
+def inject_global_data(a, b):
+    return dict(gv_contestcode = a, gv_username = b)
