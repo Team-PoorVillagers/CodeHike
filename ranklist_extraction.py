@@ -87,8 +87,8 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 		for val in current_rank_list:
 			for problem in problems_list:
 				val[problem+"Time"] = convert(val[problem+"Time"])
-		print(current_rank_list)
-		# return current_rank_list
+		# print(current_rank_list)
+		return current_rank_list
 
 def dashboard(contest_code , problems_list, original_start_time , start_time , current_time):
 	link = '../COOKOFF-dataset/' + contest_code + '.csv'
