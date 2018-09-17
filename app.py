@@ -15,6 +15,7 @@ def time_slice(t):
 
 @app.route("/")
 def main_page():
+
     return render_template("home.html")
 
 @app.route("/contestpage/<contest_code>")
@@ -35,30 +36,29 @@ def contest_page(contest_code):
     # print(time_now , v_contest_start_time)
     v_contest_start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
     end_time = v_contest_start_time + datetime.timedelta(minutes = int(float(duration)))
-    print(end_time)
+    # print(end_time)
     # print(str(datetime.timedelta(minutes = 10)))
     v_contest_start_time = time_slice(v_contest_start_time)
-    end_time = str(end_time)
-    end_time = end_time.split(".")[0]
-    print(time_now , end_time)
+    end_time = time_slice(end_time)
+    # print(time_now , end_time)
     tstamp1 = datetime.datetime.strptime(time_now , fmt)
     tstamp2 = datetime.datetime.strptime(end_time , fmt)
     p = tstamp2 - tstamp1
     p = p.total_seconds()
 
-    obj = dashboard(problems  , contest_start_time , v_contest_start_time , time_now)
+    obj = dashboard(contest_code , problems  , contest_start_time , v_contest_start_time , time_now)
 
     return render_template("contestpage.html",contest_code = contest_code, name = x['name'], mins = diff, problems = x['problems'] , obj = obj , time = p)
 
 @app.route("/standings")
 def current_standing():
-    from session import problems,v_contest_start_time,contest_start_time,duration
+    from session import problems,v_contest_start_time,contest_start_time,duration,contest_code
     fmt = '%Y-%m-%d %H:%M:%S'
     v_contest_start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
     v_contest_start_time = time_slice(v_contest_start_time)
     now = time_slice(datetime.datetime.now())
     print(v_contest_start_time , now)
-    obj = ranking(problems , contest_start_time , v_contest_start_time , now)
+    obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , now)
     # print(obj)
     return render_template("rankings.html", obj=obj , problems = problems)
 

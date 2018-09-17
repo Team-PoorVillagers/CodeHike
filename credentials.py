@@ -1,0 +1,5 @@
+access_token = '35d72b7f972b912d5dc615a8bd65b6e06d6d429b'
+refresh_token = '73ba5065cbfe89f0a701a5ffbe571cecc051d786'
+client_id = '0f78972bf84f20ef72f3f5ceecab991d'
+client_secret = '0a500be8e9cdd6f8af75048bc71cdb10'
+generated_on = '2018-09-17 17:45:30.222514'

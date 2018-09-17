@@ -3,7 +3,6 @@ from collections import defaultdict
 import operator
 import json
 from datetime import datetime
-
 def diff(t1 , t2):
 	fmt = '%Y-%m-%d %H:%M:%S'
 	tstamp1 = datetime.strptime(t1, fmt)
@@ -18,19 +17,30 @@ def convert(t):
 	t%=60
 	sec = t
 	return str(hour)+":"+str(mint)+":"+str(sec)
-def ranking(problems_list,original_start_time , start_time , current_time):
-	with open('out.csv') as csvfile:
-		ranks = {}
+def ranking(contest_code , problems_list , original_start_time , start_time , current_time):
+	link = '../COOKOFF-dataset/' + contest_code + '.csv'
+	with open(link) as csvfile:
+		match = {}
 		ranklist = []
 		current_rank_list = []
 		readcsv = list(csv.reader(csvfile , delimiter = ','))
+		for row in readcsv:
+			l = len(row)
+			for j in range(0,l):
+				if row[j] == "date":
+					match["date"] = j
+				if row[j] == "username":
+					match["username"] = j
+				if row[j] == "problemCode":
+					match["problemCode"] = j
+				if row[j] == "result":
+					match["result"] = j
+			break
 		readcsv.reverse()
 		total_names = set()
 		for row in readcsv:
-			if row[0]!="id":
-				total_names.add(row[3])
-		# print(total_names)
-		# print(problems_list)
+			if row[match["username"]] != "username":
+				total_names.add(row[match["username"]])
 		for name in total_names:
 			user = {}
 			user['name'] = name
@@ -42,25 +52,21 @@ def ranking(problems_list,original_start_time , start_time , current_time):
 				user[problem] = 0
 				user[problem+"Time"] = 0
 			ranklist.append(user)
-		# print(ranklist)
 		for row in readcsv:
-			if row[0] == 'id':
-				continue
-			# print(row)
 			time_diff1 = diff(start_time , current_time)
-			time_diff2 = diff(original_start_time , row[1])
+			time_diff2 = diff(original_start_time , row[match["date"]])
 			if time_diff2 > time_diff1:
 				break
-			username = row[3]
+			username = row[match["username"]]
 			for i in range(0,len(ranklist)):
 				if ranklist[i]['name'] == username:
 					ranklist[i]['entry'] = True
-					if row[6] == "AC" and ranklist[i][row[4]] <= 0:
-						ranklist[i][row[4]] = 1 + (ranklist[i][row[4]] * (-1))
-						ranklist[i][row[4]+"Time"] = time_diff2
+					if row[match["result"]] == "AC" and ranklist[i][row[match["problemCode"]]] <= 0:
+						ranklist[i][row[match["problemCode"]]] = 1 + (ranklist[i][row[match["problemCode"]]] * (-1))
+						ranklist[i][row[match["problemCode"]]+"Time"] = time_diff2
 
-					elif ranklist[i][row[4]]<=0:
-						ranklist[i][row[4]]-=1
+					elif ranklist[i][row[match["problemCode"]]]<=0:
+						ranklist[i][row[match["problemCode"]]]-=1
 					ranklist[i]['Total Score'] = 0
 					ranklist[i]['Penalty'] = 0
 					ranklist[i]['Total'] = 0
@@ -73,6 +79,7 @@ def ranking(problems_list,original_start_time , start_time , current_time):
 					ranklist[i]['Total']-=ranklist[i]['Penalty']
 					ranklist[i]['Penalty'] = convert(ranklist[i]['Penalty'])
 					break
+
 		ranklist.sort(key=operator.itemgetter('Total') , reverse = True)
 		for val in ranklist:
 			if val['entry'] == True:
@@ -80,13 +87,26 @@ def ranking(problems_list,original_start_time , start_time , current_time):
 		for val in current_rank_list:
 			for problem in problems_list:
 				val[problem+"Time"] = convert(val[problem+"Time"])
-		return current_rank_list
-		# for i in range(len_csv , 1, -1):
-		# 	print(readcsv['username'])
+		print(current_rank_list)
+		# return current_rank_list
 
-def dashboard(problems_list, original_start_time , start_time , current_time):
-	with open('out.csv') as csvfile:
+def dashboard(contest_code , problems_list, original_start_time , start_time , current_time):
+	link = '../COOKOFF-dataset/' + contest_code + '.csv'
+	with open(link) as csvfile:
+		match = {}
 		readcsv = list(csv.reader(csvfile , delimiter = ','))
+		for row in readcsv:
+			l = len(row)
+			for j in range(0,l):
+				if row[j] == "date":
+					match["date"] = j
+				if row[j] == "username":
+					match["username"] = j
+				if row[j] == "problemCode":
+					match["problemCode"] = j
+				if row[j] == "result":
+					match["result"] = j
+			break
 		readcsv.reverse()
 		submission = []
 		for val in problems_list:
@@ -98,17 +118,17 @@ def dashboard(problems_list, original_start_time , start_time , current_time):
 			submission.append(p)
 		for row in readcsv:
 			time_diff1 = diff(start_time , current_time)
-			time_diff2 = diff(original_start_time , row[1])
+			time_diff2 = diff(original_start_time , row[match["date"]])
 			if time_diff2 > time_diff1:
 				break
 			for i in range(0,len(submission)):
-				if submission[i]['problem_name'] == row[4]:
-					if row[6] == 'AC':
+				if submission[i]['problem_name'] == row[match["problemCode"]]:
+					if row[match["result"]] == 'AC':
 						submission[i]['correct']+=1
 					submission[i]['total']+=1
 					submission[i]['accuracy'] = str(round((submission[i]['correct']/submission[i]['total'])*100 , 2))
 		# json_file = json.dumps(submission , indent = 4)
 		# print(json_file)
 		return submission
-# ranking('2018-06-17 21:30:00' , '2018-06-17 21:37:00')
+# ranking('COOK01' , problems , '2010-07-24 21:30:00' , '2018-09-17 16:40:00' , '2018-09-17 16:53:00')
 # dashboard('2018-06-17 21:30:00' , '2018-06-17 21:45:00')

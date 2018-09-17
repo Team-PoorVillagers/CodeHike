@@ -1,6 +1,6 @@
-problems = [ 'SONYASEG' , 'DANYANUM' , 'MINIONS' , 'BTMNTREE' , 'NUMCOMP' , 'GOODPERM' ,  ] 
-contest_start_time = '2018-06-17 21:30:00'
-contest_end_time = '2018-06-18 00:00:00'
+problems = [ 'BWKNIGHT' , 'BUILDING' , 'RIPPLE' ,  ] 
+contest_start_time = '2010-07-24 21:30:00'
+contest_end_time = '2010-07-25 00:00:00'
 duration = '150.0'
-contest_code = 'COOK95A'
-v_contest_start_time = '2018-09-15 23:44:15.246056'
+contest_code = 'COOK01'
+v_contest_start_time = '2018-09-17 17:46:58.622811'

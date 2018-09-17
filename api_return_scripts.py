@@ -1,7 +1,7 @@
 import requests
 import json
 import datetime
-
+import csv
 from credentials import access_token, refresh_token, client_id, client_secret, generated_on
 
 
@@ -97,14 +97,32 @@ def return_problem_details(contest_code, problem_code):
 
 
 def test():
-	url = 'https://api.codechef.com/users/me'
+	url = 'https://api.codechef.com/submissions/?result=&year=&username=&language=&problemCode=&contestCode=&fields='
 	a = requests.get(url = url , headers  = headers)
 	parsed = a.json()
 	# for val in parsed['result']['data']['content']:
-		# print(val['result'] , val["date"] , val["problemCode"])
-	print(json.dumps(parsed, indent=4))	
-
-
+	# 	print(val['result'] , val["date"] , val["problemCode"])
+	# print(json.dumps(parsed, indent=4))	
+	sub_list = []
+	for val in parsed['result']['data']['content']:
+		# if val['problemCode'] in problems:
+			# v_contest_start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
+			# end_time = v_contest_start_time + datetime.timedelta(minutes = int(float(duration)))
+			# v_contest_start_time = time_slice(v_contest_start_time)
+			# end_time = time_slice(end_time)
+			# start_time = datetime.datetime.strptime(v_contest_start_time , fmt)
+			# end_time = datetime.datetime.strptime(end_time , fmt)
+			# sub_time = datetime.datetime.strptime(val['date'],fmt)
+			# if sub_time>=start_time and sub_time<=end_time:
+		lis = []
+		for j in val:
+			lis.append(val[j])
+		sub_list.append(lis)
+	print(sub_list)
+	myFile = open('out1.csv', 'a')
+	with myFile:
+		writer = csv.writer(myFile)
+		writer.writerows(sub_list)	
 
 
 # test()
