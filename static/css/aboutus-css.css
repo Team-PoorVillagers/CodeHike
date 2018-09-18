@@ -1,0 +1,46 @@
+.submain1{
+	height: 45%;
+	width: 23.80%;
+	border-radius: 5px;
+	/*background: #e8ebef;*/
+	float: left;
+	text-align: center;
+	margin: 10%;
+	/*box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
+  	vertical-align: middle;
+  	/*font-family: Geneva;*/
+}
+.submain2{
+	height: 45%;
+	width: 23.80%;
+	border-radius: 5px;
+	/*background: #e8ebef;*/
+	float: right;
+	text-align: center;
+	margin: 10%;
+	/*box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
+  	vertical-align: middle;
+  	/*font-family: Geneva;*/
+}
+.align-this{
+	margin: 10px;
+	/*font-family: Geneva;*/
+}
+
+.submain: hover {
+  /*box-shadow: 0 144px 248px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);*/
+}
+
+#main{
+	margin: 8% 2% 5% 2%;
+	font-size: 1.05em;
+}
+
+img{
+	height: 200px;
+	width: 200px;
+	border-radius: 50%;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+

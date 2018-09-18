@@ -20,11 +20,6 @@
     return nf(min, 2) + ':' + nf(sec, 2);
   }
 
-  // var ding;
-
-  // function preload() {
-  //   ding = loadSound("ding.mp3");
-  // }
 
   function setup() {
     var timer  = select('#timer');
@@ -40,14 +35,15 @@
             timer.html("The contest ended");
         else{
         console.log(timer);
-        timer.html(convertSeconds(timeleft - counter));
+        console.log(timeleft);
+        timer.html('Time left : ' + convertSeconds(timeleft - counter));
 
         // var interval = setInterval(timeIt, 1000);
 
         function timeIt() {
           counter++;
           // currentTime = floor((millis() - startTime) / 1000);
-          timer.html(convertSeconds(timeleft - counter));
+          timer.html('Time left : ' + convertSeconds(timeleft - counter));
           // if (currentTime == timeleft) {
               // ding.play();
               // clearInterval(interval);
@@ -58,12 +54,10 @@
     }
     } 
 </script>
-
-
 	
   <h3>{{ name }}</h3>
   <h5>Total Time(in mins) : {{ mins }}</h5>
-  <h5 id="timer"></script></h5>
+  <h5 id="timer"></h5>
 <br>
 <br>
 <table class="table table-hover">
@@ -86,11 +80,6 @@
   {% endfor %} 
   </tbody>
 </table> 
-  <hr class="my-4">
-  <center>Made with ♥ by Hasan(@hasan356) and Vishva Nath(@vishvanath45)</center>
-  </p>
-
-
 {% endblock %}
 
 

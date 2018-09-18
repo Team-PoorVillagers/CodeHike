@@ -3,6 +3,8 @@ from collections import defaultdict
 import operator
 import json
 from datetime import datetime
+import os
+
 def diff(t1 , t2):
 	fmt = '%Y-%m-%d %H:%M:%S'
 	tstamp1 = datetime.strptime(t1, fmt)
@@ -19,7 +21,13 @@ def convert(t):
 	return str(hour)+":"+str(mint)+":"+str(sec)
 
 def ranking(contest_code , problems_list , original_start_time , start_time , current_time):
-	link = '../COOKOFF-dataset/' + contest_code + '.csv'
+
+	contest_code = contest_code.upper()
+
+	print(contest_code)
+
+	link = str(os.getcwd())+'/COOKOFF-dataset/' + contest_code + '.csv'
+
 	with open(link) as csvfile:
 		match = {}
 		ranklist = []
@@ -93,7 +101,10 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 
 
 def dashboard(contest_code , problems_list, original_start_time , start_time , current_time):
-	link = '../COOKOFF-dataset/' + contest_code + '.csv'
+
+	contest_code = contest_code.upper()
+	link = str(os.getcwd())+'/COOKOFF-dataset/' + contest_code + '.csv'
+
 	with open(link) as csvfile:
 		match = {}
 		readcsv = list(csv.reader(csvfile , delimiter = ','))

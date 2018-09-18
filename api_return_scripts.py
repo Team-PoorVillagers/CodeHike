@@ -1,26 +1,19 @@
 import requests
 import json
 import datetime
-
 import csv
 
-
-import credentials as cred_file
-
-from global_app_details import client_id, client_secret, redirect_uri
-
-
-
-
-headers = {
-	'content-type': 'application/json',
-	'Authorization': 'Bearer {}'.format(cred_file.access_token)
-}
+def time_slice(t):
+    t = str(t)
+    return t[:-7]
 
 def activate_access_token():
-	if(cred_file.generated_on != ""):
+	with open('credentials.json', 'r') as f:
+		data = json.load(f)
+		f.close()
+	if(data['generated_on'] != ""):
 		fmt = '%Y-%m-%d %H:%M:%S.%f'
-		tstamp1 = datetime.datetime.strptime(cred_file.generated_on, fmt)
+		tstamp1 = datetime.datetime.strptime(data['generated_on'], fmt)
 		tstamp2 = datetime.datetime.now()
 		diff = tstamp2 - tstamp1
 		# x = seconds since access token generated
@@ -33,12 +26,20 @@ def activate_access_token():
 
 def get_access_token():
 
+	with open('global_app_details.json', 'r') as f:
+		app_data = json.load(f)
+	f.close()
+
+	with open('credentials.json', 'r') as f:
+		client_data = json.load(f)
+	f.close()
+
 	url = 'https://api.codechef.com/oauth/token'
 
 	data = {
-		'client_id': client_id,
-		'client_secret': client_secret,
-		'refresh_token': cred_file.refresh_token,
+		'client_id': app_data['client_id'],
+		'client_secret': app_data['client_secret'],
+		'refresh_token': client_data['refresh_token'],
 		'grant_type': 'refresh_token'
 	}
 
@@ -49,27 +50,36 @@ def get_access_token():
 	response = response.json()
 	generated_on = str(datetime.datetime.now())
 
-	cred_file.access_token = response['result']['data']['access_token']
-	cred_file.refresh_token = response['result']['data']['refresh_token']
-	cred_file.generated_on = generated_on
+	access_token = response['result']['data']['access_token']
+	refresh_token = response['result']['data']['refresh_token']
+	
+	new_cred_data = {
+			"access_token": str(access_token),
+			"refresh_token": str(refresh_token),
+			"generated_on":str(generated_on),
+			}
 
-	with open('credentials.py', "w+") as file:
-		file.write("access_token = '"+response['result']['data']['access_token']+"'\n")
-		file.write("refresh_token = '"+response['result']['data']['refresh_token']+"'\n")
-		file.write("generated_on = '"+generated_on+"'")
-	file.close()
+	json_data = json.dumps(new_cred_data)
+	f = open("credentials.json","w+")
+	f.write(json_data)
+	f.close()
 
+	print("access token updated!!")
 	return True
 
 
 def verify_login(auth_token):
+
+	with open('global_app_details.json', 'r') as f:
+		app_data = json.load(f)
+	f.close()
+
 	url = 'https://api.codechef.com/oauth/token'
 	login_headers = {'content-Type': 'application/json',}
-	data = '{{"grant_type": "authorization_code","code": "{}","client_id":"{}","client_secret":"{}","redirect_uri":"{}"}}'.format(auth_token, client_id, client_secret, redirect_uri)
+	data = '{{"grant_type": "authorization_code","code": "{}","client_id":"{}","client_secret":"{}","redirect_uri":"{}"}}'.format(auth_token, app_data["client_id"], app_data["client_secret"], app_data["redirect_uri"])
 	response = requests.post(url, headers=login_headers, data=data)
 	response = response.json()
 
-	print(response)
 	if(response['status'] != 'OK'):
 		return False
 	else:
@@ -77,16 +87,13 @@ def verify_login(auth_token):
 		refresh_token = response['result']['data']['refresh_token']
 		generated_on = str(datetime.datetime.now())
 
-		a = "access_token = '"+str(access_token)+"'\n"
-		b = "refresh_token = '"+str(refresh_token)+"'\n"
-		c = "generated_on = '"+str(generated_on)+"'\n"
-		print(a, b, c )
-		with open('credentials.py', "w+") as file:
-			file.write(a)
-			file.write(b)
-			file.write(c)
-		file.close()
-		get_my_details()
+		new_cred_data = {"access_token":access_token,"refresh_token":refresh_token,"generated_on":generated_on,}
+		
+		json_data = json.dumps(new_cred_data)
+		f = open("credentials.json","w+")
+		f.write(json_data)
+		f.close()
+
 		return True
 
 
@@ -101,6 +108,13 @@ def return_contest_details(contest_code):
 	Output:
 	A json variable with values.
 	"""
+	with open('credentials.json', 'r') as f:
+		client_data = json.load(f)
+	f.close()
+	headers = {
+	'content-type': 'application/json',
+	'Authorization': 'Bearer {}'.format(client_data["access_token"])
+	}
 	activate_access_token()
 	url = "https://api.codechef.com/contests/"+contest_code
 	data = requests.get(url=url,headers=headers)
@@ -120,11 +134,19 @@ def return_contest_details(contest_code):
 
 def return_problem_details(contest_code, problem_code):
 	activate_access_token()
+
+	with open('credentials.json', 'r') as f:
+		client_data = json.load(f)
+	f.close()
+	headers = {
+	'content-type': 'application/json',
+	'Authorization': 'Bearer {}'.format(client_data["access_token"])
+	}
 	url = "https://api.codechef.com/contests/"+contest_code+"/problems/"+problem_code
 	# print(url)
 	data = requests.get(url=url,headers=headers)
 	data = data.json()
-	print(data)
+	# print(data)
 	obj = {
 		'name': data['result']['data']['content']['problemName'],
 		'timelimit': data['result']['data']['content']['maxTimeLimit'],
@@ -136,6 +158,15 @@ def return_problem_details(contest_code, problem_code):
 
 
 def test():
+
+	with open('credentials.json', 'r') as f:
+		client_data = json.load(f)
+	f.close()
+	headers = {	
+	'content-type': 'application/json',
+	'Authorization': 'Bearer {}'.format(client_data["access_token"])
+	}
+
 	url = 'https://api.codechef.com/submissions/?result=&year=&username=&language=&problemCode=&contestCode=&fields='
 	a = requests.get(url = url , headers  = headers)
 	parsed = a.json()
@@ -157,26 +188,34 @@ def test():
 		for j in val:
 			lis.append(val[j])
 		sub_list.append(lis)
-	print(sub_list)
+	# print(sub_list)
 	myFile = open('out1.csv', 'a')
 	with myFile:
 		writer = csv.writer(myFile)
 		writer.writerows(sub_list)	
 
 
-# test()
-# activate_access_token()
-
 def get_my_details():
-	activate_access_token()
-	url = "https://api.codechef.com/users/me"
+
+	url = "https://api.codechef.com/users/me"	
+	with open('credentials.json', 'r') as f:
+		client_data = json.load(f)
+	f.close()
+	headers = {	
+	'content-type': 'application/json',
+	'Authorization': 'Bearer {}'.format(client_data["access_token"])
+	}
 	data = requests.get(url = url, headers = headers)
 	data = data.json()
 	username = data['result']['data']['content']['username']
-	with open('user_details.py', 'w') as f:
-		f.write("username = '"+username+"'\n")
+	user_data = {"username":username}
+	json_data = json.dumps(user_data)
+	f = open("user_data.json","w+")
+	f.write(json_data)
+	f.close()
 
-# get_my_details()
+
+
 
 # def test():
 # 	url = 'https://api.codechef.com/ide/run'

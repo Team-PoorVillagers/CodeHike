@@ -29,20 +29,24 @@
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">About Us</a>
+        <a class="nav-link" href="/aboutus">About Us</a>
       </li>
     </ul>   
   </div>
 </nav>
 <div class="jumbotron">
   {% block header %}{% endblock %}
+
+  <hr class="my-4">
+  <center>Made with ♥ by Hasan(<a href="https://github.com/hasan356">@hasan356</a>) and Vishva Nath(<a  href="https://github.com/vishvanath45">@vishvanath45</a>)</center>
 </div>
 </header>
 
   {% block content %}{% endblock %}
+
 </section>
 </body>
 </html>
