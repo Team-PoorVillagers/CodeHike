@@ -24,7 +24,7 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 
 	contest_code = contest_code.upper()
 
-	print(contest_code)
+	# print(contest_code)
 
 	link = str(os.getcwd())+'/COOKOFF-dataset/' + contest_code + '.csv'
 
@@ -45,6 +45,7 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 				if row[j] == "result":
 					match["result"] = j
 			break
+		# print(len(readcsv))
 		readcsv.reverse()
 		total_names = set()
 		for row in readcsv:

@@ -2,10 +2,16 @@ import requests
 import json
 import datetime
 import csv
+import os
 
 def time_slice(t):
     t = str(t)
     return t[:-7]
+
+
+def diff(t1 , t2):
+	p = t2 - t1
+	return p.total_seconds()
 
 def activate_access_token():
 	with open('credentials.json', 'r') as f:
@@ -215,8 +221,83 @@ def get_my_details():
 	f.close()
 
 
+def fetch_submission():
+	fmt = '%Y-%m-%d %H:%M:%S'
+	from session import problems , contest_start_time , contest_end_time ,v_contest_start_time,duration,contest_code
+	with open('credentials.json', 'r') as f:
+		client_data = json.load(f)
+	f.close()
+	headers = {	
+	'content-type': 'application/json',
+	'Authorization': 'Bearer {}'.format(client_data["access_token"])
+	}
+	with open('user_data.json', 'r') as f:
+	    user_data = json.load(f)
+	f.close()
+	username = user_data['username']
+	url = 'https://api.codechef.com/submissions/?result=&year=&username=' + username + '&language=&problemCode=&contestCode=&fields='
+	# print(url)
+	data = requests.get(url = url , headers = headers)
+	# print(data)
+	parsed = data.json()
+	print(parsed)
+	with open("submissions.json" , 'r') as f:
+		submissions = json.load(f)
+		for row in parsed['result']['data'	]['content']:
+			if row['problemCode'] in problems:
+				start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
+				end_time = start_time + datetime.timedelta(minutes = int(float(duration)))
+				start_time = time_slice(start_time)
+				end_time = time_slice(end_time)
+				start_time = datetime.datetime.strptime(start_time , fmt)
+				end_time = datetime.datetime.strptime(end_time , fmt)
+				sub_time = datetime.datetime.strptime(row['date'],fmt)
+				if sub_time>=start_time and sub_time<=end_time:
+					# print(start_time , end_time , sub_time)
+					if row not in submissions[row['problemCode']]:
+						link = str(os.getcwd())+'/COOKOFF-dataset/' + contest_code + '.csv'
+						with open(link) as csvfile:
+							readcsv = list(csv.reader(csvfile , delimiter = ','))
+							pos = 0
+							ind = len(readcsv)
+							print(ind)
+							for i in range(0 , len(readcsv)):
+								if i == 0:
+									for j in range(0,len(readcsv[i])):
+										if readcsv[i][j] == "date":
+											pos = j
+								else:
+									rank_time = datetime.datetime.strptime(readcsv[i][pos] , fmt)
+									original_time = datetime.datetime.strptime(contest_start_time , fmt)
+									time_diff1 = diff(start_time , sub_time)
+									time_diff2 = diff(original_time , rank_time)
+									if time_diff1 > time_diff2:
+										ind = i
+										break
+							# print(ind)
+							new_row  = []
+							time_diff = diff(start_time , sub_time)
+							original_time = datetime.datetime.strptime(contest_start_time , fmt)
+							modify_time = original_time + datetime.timedelta(seconds = int(time_diff))
+							for i in range(0,len(readcsv[0])):
+								if readcsv[0][i] == 'date':
+									new_row.append(modify_time)
+								else:
+									new_row.append(row[readcsv[0][i]])
+							print(modify_time)
+							readcsv.insert(ind , new_row)
+							myFile = open(link, 'w')
+							with myFile:
+							    writer = csv.writer(myFile)
+							    writer.writerows(readcsv)
+						submissions[row['problemCode']].append(row)
+						json_data = json.dumps(submissions)
+						with open('submissions.json' , "w+") as f1:
+							f1.write(json_data)
+						f1.close()
+	f.close()
 
-
+# fetch_submission()
 # def test():
 # 	url = 'https://api.codechef.com/ide/run'
 # 	data = {

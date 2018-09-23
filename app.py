@@ -62,9 +62,8 @@ def contest_page(contest_code):
     tstamp2 = datetime.datetime.strptime(end_time , fmt)
     p = tstamp2 - tstamp1
     p = p.total_seconds()
-
+    fetch_submission()
     obj = dashboard(contest_code , problems  , contest_start_time , v_contest_start_time , time_now)
-
     with open('user_data.json', 'r') as f:
         user_data = json.load(f)
     f.close()
@@ -79,6 +78,7 @@ def current_standing():
     v_contest_start_time = time_slice(v_contest_start_time)
     now = time_slice(datetime.datetime.now())
     # print(v_contest_start_time , now)
+    fetch_submission()
     obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , now)
     with open('user_data.json', 'r') as f:
         user_data = json.load(f)
@@ -92,7 +92,7 @@ def problem_details(contest_code, problem_code):
         user_data = json.load(f)
     f.close()
     return render_template('problem.html', name = x['name'], timelimit = x['timelimit'], \
-        sizelimit = x['sizelimit'], statement = x['body'], username = user_data['username'], contest_code = contest_code, contest_code_display = True)
+        sizelimit = x['sizelimit'], statement = x['body'], username = user_data['username'], problem_code = problem_code ,contest_code = contest_code, contest_code_display = True)
 
 
 # @app.route("/clock")
@@ -121,16 +121,24 @@ def welcome_page():
     duration = e_d - s_d
     duration = duration.total_seconds()/60
 
+    submissions = {}
+
     with open('session.py', "w") as file:
         file.write("problems = [ ")
         for i in obj['problems']:
+            submissions[i] = []
             file.write("'"+i+"'")
             file.write(" , ")
         file.write(" ] \n")
         file.write("contest_start_time = '"+str(s_d)+"'\n")
         file.write("contest_end_time = '"+str(e_d)+"'\n")
         file.write("duration = '"+str(duration)+"'\n")
+        file.write("contest_code = '"+str(contest_code)+"'\n")
     file.close()
+
+    json_data = json.dumps(submissions)
+    with open('submissions.json' , "w+") as f:
+        f.write(json_data)
 
     with open('user_data.json', 'r') as f:
         user_data = json.load(f)
@@ -145,7 +153,6 @@ def begin_contest():
     v_contest_start_time = str(datetime.datetime.now())
     
     with open('session.py', "a") as file:
-        file.write("contest_code = '"+contest_code+"'\n")
         file.write("v_contest_start_time = '"+v_contest_start_time+"'\n")
 
     with open('user_data.json', 'r') as f:
