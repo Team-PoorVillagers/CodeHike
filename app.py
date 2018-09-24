@@ -15,10 +15,8 @@ def main_page():
         f.close()
         return render_template("home-no-login.html", client_id = app_data["client_id"], redirect_uri = app_data["redirect_uri"])
     else:
-        with open('user_data.json', 'r') as f:
-            user_data = json.load(f)
-        f.close()
-        return render_template("home.html", username = user_data['username'], contest_code_display = False)
+        username = session['username']
+        return render_template("home.html", username = username, contest_code_display = False)
 
 
 @app.route('/auth', methods=['GET'])
@@ -70,10 +68,8 @@ def contest_page(contest_code):
     p = p.total_seconds()
     fetch_submission()
     obj = dashboard(contest_code , problems  , contest_start_time , v_contest_start_time , time_now)
-    with open('user_data.json', 'r') as f:
-        user_data = json.load(f)
-    f.close()
-    return render_template("contestpage.html",contest_code = contest_code, name = x['name'], mins = diff, problems = x['problems'] , obj = obj , time = p, username = user_data['username'], contest_code_display = True)
+    username = session['username']
+    return render_template("contestpage.html",contest_code = contest_code, name = x['name'], mins = diff, problems = x['problems'] , obj = obj , time = p, username = username, contest_code_display = True)
 
 @app.route("/standings")
 def current_standing():
@@ -86,19 +82,15 @@ def current_standing():
     # print(v_contest_start_time , now)
     fetch_submission()
     obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , now)
-    with open('user_data.json', 'r') as f:
-        user_data = json.load(f)
-    f.close()
-    return render_template("rankings.html", obj=obj , problems = problems, username = user_data['username'], contest_code = contest_code, contest_code_display = True)
+    username = session['username']
+    return render_template("rankings.html", obj=obj , problems = problems, username = username, contest_code = contest_code, contest_code_display = True)
 
 @app.route("/problem/<contest_code>/<problem_code>")
 def problem_details(contest_code, problem_code):
     x = return_problem_details(contest_code, problem_code)
-    with open('user_data.json', 'r') as f:
-        user_data = json.load(f)
-    f.close()
+    username = session['username']
     return render_template('problem.html', name = x['name'], timelimit = x['timelimit'], \
-        sizelimit = x['sizelimit'], statement = x['body'], username = user_data['username'], problem_code = problem_code ,contest_code = contest_code, contest_code_display = True)
+        sizelimit = x['sizelimit'], statement = x['body'], username = username, problem_code = problem_code ,contest_code = contest_code, contest_code_display = True)
 
 
 # @app.route("/clock")
@@ -146,12 +138,10 @@ def welcome_page():
     with open('submissions.json' , "w+") as f:
         f.write(json_data)
 
-    with open('user_data.json', 'r') as f:
-        user_data = json.load(f)
-    f.close()
+    username = session['username']
 
     return render_template("contest_welcome.html" ,contest_code = contest_code,\
-     name = obj['name'], mins = duration, s_d = s_d, e_d = e_d , username = user_data['username'],contest_code_display = False )
+     name = obj['name'], mins = duration, s_d = s_d, e_d = e_d , username = username ,contest_code_display = False )
 
 @app.route("/begin_contest", methods=['POST'])
 def begin_contest():
@@ -161,11 +151,9 @@ def begin_contest():
     with open('session.py', "a") as file:
         file.write("v_contest_start_time = '"+v_contest_start_time+"'\n")
 
-    with open('user_data.json', 'r') as f:
-        user_data = json.load(f)
-    f.close()
+    username = session['username']
 
-    return redirect(url_for('contest_page',contest_code = contest_code, username = user_data['username'], contest_code_display = True))
+    return redirect(url_for('contest_page',contest_code = contest_code, username = username, contest_code_display = True))
 
 
 if __name__ == "__main__":

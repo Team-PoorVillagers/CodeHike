@@ -201,7 +201,7 @@ def fetch_submission():
 					sub_time = datetime.datetime.strptime(row['date'],fmt)
 					if sub_time>=start_time and sub_time<=end_time:
 						# print(start_time , end_time , sub_time)
-						if row not in submissions[row['problemCode']]:
+						if row['id'] not in submissions[row['problemCode']]:
 							collections = db[contest_code]
 							ind = 0
 							for row1 in collections.find():
@@ -221,7 +221,7 @@ def fetch_submission():
 								new_row.append(row[val])
 							new_row["date"] = modify_time
 							collections.insert(new_row)
-							submissions[row['problemCode']].append(row)
+							submissions[row['problemCode']].append(row['id'])
 							json_data = json.dumps(submissions)
 							with open('submissions.json' , "w+") as f1:
 								f1.write(json_data)
