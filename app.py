@@ -3,7 +3,7 @@ from flask import Flask, render_template, jsonify, request, redirect,  url_for, 
 from ranklist_extraction import ranking,dashboard
 from api_return_scripts import *
 import json
-
+import os
 app = Flask(__name__)
 
 @app.route("/")
@@ -35,6 +35,7 @@ def do_login():
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
+    os.remove('credentials.json')
     return main_page()
 
 @app.route("/aboutus")
@@ -163,12 +164,12 @@ def begin_contest():
 
 
 if __name__ == "__main__":
-
-    cred_data = {"access_token":"","refresh_token":"","generated_on":"",}
-    json_data = json.dumps(cred_data)
-    f = open("credentials.json","w+")
-    f.write(json_data)
-    f.close()
-    
+    if not os.path.isfile('credentials.json'):
+        cred_data = {"access_token":"","refresh_token":"","generated_on":"",}
+        json_data = json.dumps(cred_data)
+        f = open("credentials.json","w+")
+        f.write(json_data)
+        f.close()
+        
     app.secret_key = "this is super secret wanna lubba dub dub"
     app.run(debug=True)

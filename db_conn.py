@@ -10,7 +10,15 @@ client = pymongo.MongoClient(uri_string)
 
 db = client.db
 
-print(db)
+
+# collections = db['COOK01']
+
+
+# for collection in collections.find():
+	# print(collection)
+# print(collection.find_one())
+
+# print(db)
 # Example for you to do things. 
 
 # Create a new collection
