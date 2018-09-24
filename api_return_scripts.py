@@ -22,6 +22,7 @@ def diff(t1 , t2):
 def activate_access_token():
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
+	user_data = user_data[0]
 
 	if(user_data['generated_on'] != ""):
 		fmt = '%Y-%m-%d %H:%M:%S.%f'
@@ -43,6 +44,7 @@ def get_access_token():
 
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
+	user_data = user_data[0]
 
 	url = 'https://api.codechef.com/oauth/token'
 
@@ -111,6 +113,7 @@ def return_contest_details(contest_code):
 	"""
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
+	user_data = user_data[0]
 
 	headers = {
 	'content-type': 'application/json',
@@ -122,9 +125,10 @@ def return_contest_details(contest_code):
 	data = data.json()
 	# print(data)
 	problems = []
+	# print(data)
 	for i in data['result']['data']['content']['problemsList']:
 		problems.append(i['problemCode'])
-	print(problems)
+	# print(problems)
 	obj = {
 		'name': data['result']['data']['content']['name'],
 		'start_date': data['result']['data']['content']['startDate'],
@@ -139,6 +143,7 @@ def return_problem_details(contest_code, problem_code):
 
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
+	user_data = user_data[0]
 
 	headers = {
 	'content-type': 'application/json',
@@ -175,6 +180,7 @@ def fetch_submission():
 
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
+	user_data = user_data[0]
 
 	headers = {	
 	'content-type': 'application/json',

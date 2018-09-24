@@ -9,10 +9,8 @@ app = Flask(__name__)
 @app.route("/")
 def main_page():
     if not session.get('logged_in'):
-        with open('global_app_details.json', 'r') as f:
-            app_data = json.load(f)
-            # print(app_data)
-        f.close()
+        field = db['app_data'].find()
+        app_data = field[0]
         return render_template("home-no-login.html", client_id = app_data["client_id"], redirect_uri = app_data["redirect_uri"])
     else:
         username = session['username']
@@ -33,7 +31,6 @@ def do_login():
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
-    os.remove('credentials.json')
     return main_page()
 
 @app.route("/aboutus")
