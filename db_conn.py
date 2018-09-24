@@ -8,9 +8,6 @@ client = pymongo.MongoClient(uri_string)
 
 db = client.db
 
-<<<<<<< Updated upstream
-
-# collections = db['COOK01']
 
 
 # for collection in collections.find():
@@ -18,8 +15,6 @@ db = client.db
 # print(collection.find_one())
 
 # print(db)
-=======
->>>>>>> Stashed changes
 # Example for you to do things. 
 
 # Create a new collection

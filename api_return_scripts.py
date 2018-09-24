@@ -3,6 +3,7 @@ import json
 import datetime
 import csv
 import os
+from db_conn import db
 
 from flask import session
 
@@ -203,44 +204,25 @@ def fetch_submission():
 					if sub_time>=start_time and sub_time<=end_time:
 						# print(start_time , end_time , sub_time)
 						if row not in submissions[row['problemCode']]:
-							link = str(os.getcwd())+'/COOKOFF-dataset/' + contest_code + '.csv'
-							with open(link) as csvfile:
-								readcsv = list(csv.reader(csvfile , delimiter = ','))
-								pos = 0
-								ind = len(readcsv)
-								# print(ind)
-								for i in range(0 , len(readcsv)):
-									if i == 0:
-										for j in range(0,len(readcsv[i])):
-											if readcsv[i][j] == "date":
-												pos = j
-									else:
-										rank_time = datetime.datetime.strptime(readcsv[i][pos] , fmt)
-										original_time = datetime.datetime.strptime(contest_start_time , fmt)
-										time_diff1 = diff(start_time , sub_time)
-										time_diff2 = diff(original_time , rank_time)
-										if time_diff1 > time_diff2:
-											ind = i
-											break
-								# print(ind)
-								new_row  = []
-								time_diff = diff(start_time , sub_time)
+							collections = db[contest_code]
+							ind = 0
+							for row1 in collections.find():
+								rank_time = datetime.datetime.strptime(row1['date'] , fmt)
 								original_time = datetime.datetime.strptime(contest_start_time , fmt)
-								modify_time = original_time + datetime.timedelta(seconds = int(time_diff))
-								for i in range(0,len(readcsv[0])):
-									if readcsv[0][i] == 'date':
-										new_row.append(modify_time)
-									else:
-										if readcsv[0][i] == "username":
-											new_row.append("*" + username)
-										else:
-											new_row.append(row[readcsv[0][i]])
-								# print(modify_time)
-								readcsv.insert(ind , new_row)
-								myFile = open(link, 'w')
-								with myFile:
-								    writer = csv.writer(myFile)
-								    writer.writerows(readcsv)
+								time_diff1 = diff(start_time , sub_time)
+								time_diff2 = diff(original_time , rank_time)
+								if time_diff1 > time_diff2:
+									ind = row1["id"]
+									break
+							# print(ind)
+							new_row  = []
+							time_diff = diff(start_time , sub_time)
+							original_time = datetime.datetime.strptime(contest_start_time , fmt)
+							modify_time = original_time + datetime.timedelta(seconds = int(time_diff))
+							for val in collections.find_one():
+								new_row.append(row[val])
+							new_row["date"] = modify_time
+							collections.insert(new_row)
 							submissions[row['problemCode']].append(row)
 							json_data = json.dumps(submissions)
 							with open('submissions.json' , "w+") as f1:
