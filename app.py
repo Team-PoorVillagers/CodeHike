@@ -27,7 +27,7 @@ def do_login():
     x = verify_login(auth_token)
     if (x == True):
         session['logged_in'] = True
-        get_my_details()
+        # get_my_details()
     else:
         flash('wrong password!')
     return main_page()
@@ -41,6 +41,11 @@ def logout():
 @app.route("/aboutus")
 def aboutus():
     return render_template("aboutus.html")
+
+
+@app.route("/friends")
+def friends():
+    return render_template("friends.html")
 
 
 @app.route("/contestpage/<contest_code>")
@@ -164,12 +169,5 @@ def begin_contest():
 
 
 if __name__ == "__main__":
-    if not os.path.isfile('credentials.json'):
-        cred_data = {"access_token":"","refresh_token":"","generated_on":"",}
-        json_data = json.dumps(cred_data)
-        f = open("credentials.json","w+")
-        f.write(json_data)
-        f.close()
-        
     app.secret_key = "this is super secret wanna lubba dub dub"
     app.run(debug=True)

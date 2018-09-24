@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+{% extends 'base-login.html' %}
+
+{% block header %}
+
+
+  <h4>Add Friends</h4>
+  <p>You will be able to see their Ranks in seperate category in <a href="/standings">Leaderboard</a></p>
+
+
+  <form class="form-inline" action="/add_friend" method="GET">
+    <div class="form-group mx-sm-3 mb-2">
+      <label for="inputPassword2" class="sr-only">Enter username</label>
+      Enter Username : &nbsp;<input type="text" class="form-control" placeholder="eg. hasan_356, v_ns" name="username1">
+      &nbsp;&nbsp;
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+  <br>
+<table class ="table table-striped table-bordered table-hover" id="itemList">
+    <thead>
+        <tr>
+            <td>Sr no. </td>
+            <td>Username</td>
+            <td>Name</td>
+            <td>Remove Friend</td>
+        </tr>
+    </thead>
+    <tdata>
+        <tr>
+            <td>1 </td>
+            <td>v_ns</td>
+            <td>Vishva nath </td>
+            <td><a href="/delete_friend?username=">Confirm delete</a></td>
+        </tr>
+    </tbody>
+    <tbody>
+
+    </tbody>
+</table>
+  
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}

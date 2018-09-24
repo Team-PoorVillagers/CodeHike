@@ -4,12 +4,11 @@ passw = os.environ['DB_PASSKEY']
 
 uri_string =  "mongodb://root:"+str(passw)+"@dds-6gj13ff1b21a36b41209-pub.mongodb.ap-south-1.rds.aliyuncs.com:3717,dds-6gj13ff1b21a36b42533-pub.mongodb.ap-south-1.rds.aliyuncs.com:3717/admin?replicaSet=mgset-1050001983"
 
-print(uri_string)
-
 client = pymongo.MongoClient(uri_string)
 
 db = client.db
 
+<<<<<<< Updated upstream
 
 # collections = db['COOK01']
 
@@ -19,10 +18,12 @@ db = client.db
 # print(collection.find_one())
 
 # print(db)
+=======
+>>>>>>> Stashed changes
 # Example for you to do things. 
 
 # Create a new collection
-# db.create_collection("COOK01")
+# db.create_collection("app_data")
 
 # Get name of all collections 
 # collects = db.collection_names(include_system_collections=False)
