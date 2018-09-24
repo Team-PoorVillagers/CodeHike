@@ -8,6 +8,8 @@ client = pymongo.MongoClient(uri_string)
 
 db = client.db
 
+# collections = db['COOK01']
+
 
 
 # for collection in collections.find():
@@ -15,6 +17,7 @@ db = client.db
 # print(collection.find_one())
 
 # print(db)
+
 # Example for you to do things. 
 
 # Create a new collection
@@ -43,3 +46,7 @@ Collections-
 	- COOK02
 
 """
+
+# x = db['app_data'].find()
+
+# print(x[0]['client_id'])
