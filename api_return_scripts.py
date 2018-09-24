@@ -38,9 +38,8 @@ def activate_access_token():
 
 def get_access_token():
 
-	with open('global_app_details.json', 'r') as f:
-		app_data = json.load(f)
-	f.close()
+    field = db['app_data'].find()
+    app_data = field[0]
 
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
@@ -72,9 +71,8 @@ def get_access_token():
 
 def verify_login(auth_token):
 
-	with open('global_app_details.json', 'r') as f:
-		app_data = json.load(f)
-	f.close()
+    field = db['app_data'].find()
+    app_data = field[0]
 
 	url = 'https://api.codechef.com/oauth/token'
 	login_headers = {'content-Type': 'application/json',}
