@@ -28,12 +28,14 @@
         </tr>
     </thead>
     <tdata>
+      {% for friend in friends %}
         <tr>
-            <td>1 </td>
-            <td>v_ns</td>
-            <td>Vishva nath </td>
-            <td><a href="/delete_friend?username=">Confirm delete</a></td>
+          {% for val in friend %}
+            <td>{{ val }}</td>
+          {% endfor %}
+          <td><a href="/delete_friend?username={{ friend[1] }}">Confirm delete</a></td>
         </tr>
+      {% endfor %}
     </tbody>
     <tbody>
 

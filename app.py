@@ -40,7 +40,13 @@ def aboutus():
 
 @app.route("/friends")
 def friends():
-    return render_template("friends.html")
+    from session import contest_code
+    username = session['username']
+    friends_data = db['user_data'].find_one({'_id':username})
+    friends = friends_data['friends']
+    for i in range(0 ,len(friends)):
+        friends[i].insert(0 , i+1)
+    return render_template("friends.html" , friends = friends , username = username , contest_code_display = True , contest_code = contest_code)
 
 
 @app.route("/contestpage/<contest_code>")
@@ -152,6 +158,43 @@ def begin_contest():
 
     return redirect(url_for('contest_page',contest_code = contest_code, username = username, contest_code_display = True))
 
+@app.route("/add_friend" , methods = ['GET'])
+def add_friend():
+
+    username = session['username']
+    user_data = db['user_data'].find({'_id':username})
+    user_data = user_data[0]
+
+    headers = {
+    'content-type': 'application/json',
+    'Authorization': 'Bearer {}'.format(user_data["access_token"])
+    }
+
+    name = request.args.get('username1')
+    url = "https://api.codechef.com/users/" + name
+    data = requests.get(url=url,headers=headers)
+    data = data.json()
+    fullname = data['result']['data']['content']['fullname']
+    friends = user_data['friends']
+    if [name,fullname] not in friends and name not in [username]:
+        # print(name)
+        friends.append([name , fullname])
+        db['user_data'].update_one({'_id': username}, {'$set': {'friends': friends}})
+    return redirect(url_for('friends'))
+
+@app.route("/delete_friend" , methods = ['GET'])
+def delete_friend():
+    username = session['username']
+    user_data = db['user_data'].find({'_id':username})
+    user_data = user_data[0]
+    name = request.args.get('username')
+    friends = user_data['friends']
+    for i in range(0 , len(friends)):
+        if friends[i][0] == name:
+            del friends[i:i+1]
+            break
+    db['user_data'].update_one({'_id': username}, {'$set': {'friends': friends}})
+    return redirect(url_for('friends'))
 
 if __name__ == "__main__":
     app.secret_key = "this is super secret wanna lubba dub dub"

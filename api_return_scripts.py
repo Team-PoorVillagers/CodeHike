@@ -91,7 +91,7 @@ def verify_login(auth_token):
 		username = get_my_details(access_token)
 		if(db['user_data'].find_one({'_id':username}) == None):
 			db['user_data'].insert({'_id':username,'access_token':access_token,'refresh_token':refresh_token,
-				'generated_on':generated_on})
+				'generated_on':generated_on , 'friends' : list()})
 		else:
 			db['user_data'].update({'_id': username},{ '$set':{'access_token': access_token, 'refresh_token':refresh_token, 'generated_on':generated_on}}, upsert=False)
 
@@ -192,7 +192,7 @@ def fetch_submission():
 	data = requests.get(url = url , headers = headers)
 	# print(data)	
 	parsed = data.json()
-
+	# print(parsed)
 	if parsed['result']['data']['code'] == 9001:
 		with open("submissions.json" , 'r') as f:
 			submissions = json.load(f)
@@ -219,13 +219,15 @@ def fetch_submission():
 									ind = row1["id"]
 									break
 							# print(ind)
-							new_row  = []
+							new_row  = {}
 							time_diff = diff(start_time , sub_time)
 							original_time = datetime.datetime.strptime(contest_start_time , fmt)
 							modify_time = original_time + datetime.timedelta(seconds = int(time_diff))
 							for val in collections.find_one():
-								new_row.append(row[val])
-							new_row["date"] = modify_time
+								if val!='_id':
+									new_row[val] = row[val]
+							new_row['date'] = str(modify_time)
+							new_row['username'] = '*' + username
 							collections.insert(new_row)
 							submissions[row['problemCode']].append(row['id'])
 							json_data = json.dumps(submissions)

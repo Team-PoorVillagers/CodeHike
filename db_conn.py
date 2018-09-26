@@ -8,6 +8,10 @@ client = pymongo.MongoClient(uri_string)
 
 db = client.db
 
+# collections = db['user_data']
+
+# collections.delete_one({'_id' : 'hasan_356'})
+
 # collections = db['COOK01']
 
 

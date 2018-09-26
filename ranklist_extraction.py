@@ -4,6 +4,7 @@ import operator
 import json
 from datetime import datetime
 import os
+import math
 from db_conn import db
 def diff(t1 , t2):
 	fmt = '%Y-%m-%d %H:%M:%S'
@@ -88,6 +89,16 @@ def dashboard(contest_code , problems_list, original_start_time , start_time , c
 	# link = str(os.getcwd())+'/COOKOFF-dataset/' + contest_code + '.csv'
 	collections = db[contest_code]
 	submission = []
+	user_submissions = []
+	total_names = set()
+	for row in collections.find():
+			total_names.add(row["username"])
+	for name in total_names:
+		user = {}
+		user['name'] = name
+		for problem in problems_list:
+			user[problem] = 0
+		user_submissions.append(user)
 	for val in problems_list:
 		p = {}
 		p['problem_name'] = val
@@ -100,12 +111,27 @@ def dashboard(contest_code , problems_list, original_start_time , start_time , c
 		time_diff2 = diff(original_start_time , row["date"])
 		if time_diff2 > time_diff1:
 			break
-		for i in range(0,len(submission)):
-			if submission[i]['problem_name'] == row["problemCode"]:
-				if row["result"] == 'AC':
+		username = row["username"]
+		for i in range(0,len(user_submissions)):
+			if user_submissions[i]['name'] == username:
+				if row["result"] == "AC" and user_submissions[i][row["problemCode"]] <= 0:
+					user_submissions[i][row["problemCode"]] = 1 + (user_submissions[i][row["problemCode"]] * (-1))
+				elif user_submissions[i][row["problemCode"]]<=0:
+					user_submissions[i][row["problemCode"]]-=1
+				break
+	for val in user_submissions:
+		for i in range(0 , len(problems_list)):
+			if val[problems_list[i]]!=0:
+				if val[problems_list[i]] > 0:
 					submission[i]['correct']+=1
-				submission[i]['total']+=1
+				submission[i]['total']+=abs(val[problems_list[i]])
 				submission[i]['accuracy'] = str(round((submission[i]['correct']/submission[i]['total'])*100 , 2))
+		# for i in range(0,len(submission)):
+		# 	if submission[i]['problem_name'] == row["problemCode"]:
+		# 		if row["result"] == 'AC':
+		# 			submission[i]['correct']+=1
+		# 		submission[i]['total']+=1
+		# 		submission[i]['accuracy'] = str(round((submission[i]['correct']/submission[i]['total'])*100 , 2))
 	# json_file = json.dumps(submission , indent = 4)
 	# print(json_file)
 	return submission
