@@ -44,7 +44,7 @@ for (var i = 1 ; i <= obj.length ; i++)
 {
   var rows = "";
 
-  rows += "<tr><td>" + i + "</td><td>" + obj[i-1]["name"] + "</td><td>" + obj[i-1]["Total Score"] + "</td><td>" + obj[i-1]["Penalty"];
+  rows += "<tr><td>" + i + "</td><td>" + "<a target='_blank' href='/compare?compare_with='"+obj[i-1]["name"] +"&contentcode={{ contest_code }}>" +obj[i-1]["name"] +"</a>"+ "</td><td>" + obj[i-1]["Total Score"] + "</td><td>" + obj[i-1]["Penalty"];
   for(var j = 0 ; j < problems.length ;j++){
     rows += "</td><td>"  + obj[i-1][problems[j]] ;
     // console.log(nes_row)

@@ -196,6 +196,16 @@ def delete_friend():
     db['user_data'].update_one({'_id': username}, {'$set': {'friends': friends}})
     return redirect(url_for('friends'))
 
+@app.route("/compare", methods=['GET'])
+def compare():
+    compare_with = request.args.get("compare_with")
+    contestcode = request.args.get("contestcode")
+
+    u1data= compare_results(compare_with, contestcode)
+
+    return render_template("compare.html", u1data = u1data, compare_with = compare_with, contestcode = contestcode)
+
+
 if __name__ == "__main__":
     app.secret_key = "this is super secret wanna lubba dub dub"
     app.run(debug=True)

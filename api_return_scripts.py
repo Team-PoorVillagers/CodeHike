@@ -236,6 +236,64 @@ def fetch_submission():
 							f1.close()
 		f.close()	
 
+
+def compare_results(compare_with, contestcode):
+
+	username = session['username']
+
+	from session import problems, contest_start_time
+	from datetime import datetime
+
+	# username = 'saar_007'
+	username2 = compare_with
+
+	fmt = '%Y-%m-%d %H:%M:%S'
+
+	data_dict = dict()
+
+	for i in problems:
+		tries = 0
+		kk = []
+		x = db[contestcode].find({'username':username, 'problemCode':str(i)})
+		flag = False
+		for k in x:
+			if(k['result'] == 'AC'):
+				date = k['date']
+				tstamp1 = datetime.strptime(contest_start_time, fmt)
+				tstamp2 = datetime.strptime(date, fmt)
+				td = tstamp2 - tstamp1
+				td_mins = int(round(td.total_seconds() / 60))
+				oo = [td_mins, k['time'], k['language'], tries]
+				kk.append(oo)
+				flag = True
+				break
+			tries += 1
+		if(flag == False):
+			oo = [tries]
+			kk.append(oo)
+		tries = 0
+		x = db[contestcode].find({'username':username2, 'problemCode':str(i)})
+		flag = False
+		for k in x:
+			if(k['result'] == 'AC'):
+				date = k['date']
+				tstamp1 = datetime.strptime(contest_start_time, fmt)
+				tstamp2 = datetime.strptime(date, fmt)
+				td = tstamp2 - tstamp1
+				td_mins = int(round(td.total_seconds() / 60))
+				oo = [td_mins, k['time'], k['language'], tries]
+				kk.append(oo)
+				flag = True
+				break
+			tries += 1
+		if(flag == False):
+			oo = [tries]
+			kk.append(oo)
+		data_dict[i] = kk
+		kk = []
+
+	return data_dict
+
 # fetch_submission()
 # def test():
 # 	url = 'https://api.codechef.com/ide/run'
