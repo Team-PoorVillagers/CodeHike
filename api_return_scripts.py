@@ -244,9 +244,6 @@ def compare_results(compare_with, contestcode):
 	from session import problems, contest_start_time
 	from datetime import datetime
 
-	# username = 'saar_007'
-	username2 = compare_with
-
 	fmt = '%Y-%m-%d %H:%M:%S'
 
 	data_dict = dict()
@@ -254,7 +251,7 @@ def compare_results(compare_with, contestcode):
 	for i in problems:
 		tries = 0
 		kk = []
-		x = db[contestcode].find({'username':username, 'problemCode':str(i)})
+		x = db[contestcode].find({'username':username,'problemCode':str(i)})
 		flag = False
 		for k in x:
 			if(k['result'] == 'AC'):
@@ -272,7 +269,7 @@ def compare_results(compare_with, contestcode):
 			oo = [tries]
 			kk.append(oo)
 		tries = 0
-		x = db[contestcode].find({'username':username2, 'problemCode':str(i)})
+		x = db[contestcode].find({'username':username2,'problemCode':str(i)})
 		flag = False
 		for k in x:
 			if(k['result'] == 'AC'):

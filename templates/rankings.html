@@ -28,6 +28,17 @@
                 <td>{{ problem }}</td>
             {% endfor %}
         </tr>
+        {% for val in obj %}
+        <tr>
+          <td> 1 </td>
+          <td> <a target='_blank' href='/compare?compare_with={{ val["name"] }}&contestcode={{ contest_code }}'>{{ val['name'] }}</a></td>
+          <td> {{ val["Total Score"] }} </td>
+          <td> {{ val["Penalty"] }} </td>
+          {% for problem in problems %}
+            <td> {{ val[problem] }} </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
     </thead>
     <tbody>
 
@@ -35,7 +46,7 @@
 </table>
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   
 var obj = {{ obj|tojson }};
 var problems = {{ problems|tojson }}
@@ -44,7 +55,7 @@ for (var i = 1 ; i <= obj.length ; i++)
 {
   var rows = "";
 
-  rows += "<tr><td>" + i + "</td><td>" + "<a target='_blank' href='/compare?compare_with='"+obj[i-1]["name"] +"&contentcode={{ contest_code }}>" +obj[i-1]["name"] +"</a>"+ "</td><td>" + obj[i-1]["Total Score"] + "</td><td>" + obj[i-1]["Penalty"];
+  rows += "<tr><td>" + i + "</td><td>" + "<a target='_blank' href='/compare?compare_with='"+obj[i-1]["name"] +"&contestcode={{ contest_code }}>" +obj[i-1]["name"] +"</a>"+ "</td><td>" + obj[i-1]["Total Score"] + "</td><td>" + obj[i-1]["Penalty"];
   for(var j = 0 ; j < problems.length ;j++){
     rows += "</td><td>"  + obj[i-1][problems[j]] ;
     // console.log(nes_row)
@@ -54,7 +65,7 @@ for (var i = 1 ; i <= obj.length ; i++)
 }
 // $(rows).appendTo("#itemList tbody");
 </script>
-
+ -->
 </p>
 
 

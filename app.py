@@ -202,7 +202,7 @@ def compare():
     contestcode = request.args.get("contestcode")
 
     u1data= compare_results(compare_with, contestcode)
-
+    print(u1data)
     return render_template("compare.html", u1data = u1data, compare_with = compare_with, contestcode = contestcode)
 
 
