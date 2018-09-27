@@ -247,6 +247,7 @@ def compare_results(compare_with, contestcode):
 	fmt = '%Y-%m-%d %H:%M:%S'
 
 	data_dict = dict()
+	username2 = compare_with
 
 	for i in problems:
 		tries = 0

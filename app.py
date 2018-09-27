@@ -74,8 +74,16 @@ def contest_page(contest_code):
     username = session['username']
     return render_template("contestpage.html",contest_code = contest_code, name = x['name'], mins = diff, problems = x['problems'] , obj = obj , time = p, username = username, contest_code_display = True)
 
-@app.route("/standings")
+@app.route("/standings", methods=['GET'])
 def current_standing():
+
+    friends = request.args.get("friends")
+
+    # if friends == True, then user wants friends ranklist, each case you need
+    # send a variable named friends, whose value can be True and False
+    # if friends variable is True, that means data you sent is of friends.
+    # there might be confusion as both GET variable and varible which we are sending 
+    # both are named as friends.
 
     from session import problems,v_contest_start_time,contest_start_time,duration,contest_code
     fmt = '%Y-%m-%d %H:%M:%S'
@@ -202,8 +210,8 @@ def compare():
     contestcode = request.args.get("contestcode")
 
     u1data= compare_results(compare_with, contestcode)
-    print(u1data)
-    return render_template("compare.html", u1data = u1data, compare_with = compare_with, contestcode = contestcode)
+    username = session['username']
+    return render_template("compare.html", username = username, u1data = u1data, compare_with = compare_with, contestcode = contestcode)
 
 
 if __name__ == "__main__":

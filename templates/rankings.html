@@ -14,9 +14,18 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
   <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script> -->
 
+{% if friends %}
+<h4 class="display-4">Friends Standing!!</h4>
+{% else %}
+<h4 class="display-4">Current Standing!!</h4>
+{% endif %}
 
-  <h4 class="display-4">Current Standing!!</h4>
-
+    {% if friends %}
+          <a class="btn btn-info btn-lg" href="/standings?friends=False" role="button"> Go to Overall Standing</a>
+    {% else %}
+          <a class="btn btn-info btn-lg" href="/standings?friends=True" role="button">Go to Friends Standing</a>
+    {% endif %}
+  <br>
 <table class ="table table-striped table-bordered table-hover" id="itemList">
     <thead>
         <tr>
