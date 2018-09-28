@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 import math
 from db_conn import db
+from flask import session
 def diff(t1 , t2):
 	fmt = '%Y-%m-%d %H:%M:%S'
 	tstamp1 = datetime.strptime(t1, fmt)
@@ -21,12 +22,16 @@ def convert(t):
 	sec = t
 	return str(hour)+":"+str(mint)+":"+str(sec)
 
-def ranking(contest_code , problems_list , original_start_time , start_time , current_time):
+def ranking(contest_code , problems_list , original_start_time , start_time , current_time , is_friends):
 
 	contest_code = contest_code.upper()
-
-	# print(contest_code)
-
+	username = session['username']
+	user_data = db['user_data'].find({'_id':username})
+	user_data = user_data[0]
+	friend_list = user_data['friends']
+	friends = []
+	for friend in friend_list:
+		friends.append(friend[0])
 	# link = str(os.getcwd())+'/COOKOFF-dataset/' + contest_code + '.csv'
 	collections = db[contest_code]
 	ranklist = []
@@ -36,6 +41,7 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 			total_names.add(row["username"])
 	for name in total_names:
 		user = {}
+		user['rank'] = 0
 		user['name'] = name
 		user['entry'] = False
 		user['Total Score'] = 0
@@ -71,11 +77,30 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 				ranklist[i]['Total']-=ranklist[i]['Penalty']
 				ranklist[i]['Penalty'] = convert(ranklist[i]['Penalty'])
 				break
-
+	prev_score = -1
+	cnt = 0
 	ranklist.sort(key=operator.itemgetter('Total') , reverse = True)
 	for val in ranklist:
 		if val['entry'] == True:
-			current_rank_list.append(val)
+			if is_friends:
+				if val['name'] in friends:
+					if val['Total']!=prev_score:
+						cnt+=1
+						val['rank'] = cnt
+					else:
+						val['rank'] = cnt
+					prev_score = val['Total']
+					current_rank_list.append(val)
+				else:
+					continue
+			else:
+				if val['Total']!=prev_score:
+					cnt+=1
+					val['rank'] = cnt
+				else:
+					val['rank'] = cnt
+				prev_score = val['Total']
+				current_rank_list.append(val)
 	for val in current_rank_list:
 		for problem in problems_list:
 			val[problem+"Time"] = convert(val[problem+"Time"])

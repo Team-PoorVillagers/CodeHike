@@ -92,9 +92,9 @@ def current_standing():
     now = time_slice(datetime.datetime.now())
     # print(v_contest_start_time , now)
     fetch_submission()
-    obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , now)
+    obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , now , friends)
     username = session['username']
-    return render_template("rankings.html", obj=obj , problems = problems, username = username, contest_code = contest_code, contest_code_display = True)
+    return render_template("rankings.html", obj=obj , problems = problems, username = username, contest_code = contest_code, contest_code_display = True , friends = friends)
 
 @app.route("/problem/<contest_code>/<problem_code>")
 def problem_details(contest_code, problem_code):

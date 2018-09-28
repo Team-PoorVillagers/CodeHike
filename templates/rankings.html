@@ -21,7 +21,7 @@
 {% endif %}
 
     {% if friends %}
-          <a class="btn btn-info btn-lg" href="/standings?friends=False" role="button"> Go to Overall Standing</a>
+          <a class="btn btn-info btn-lg" href="/standings" role="button"> Go to Overall Standing</a>
     {% else %}
           <a class="btn btn-info btn-lg" href="/standings?friends=True" role="button">Go to Friends Standing</a>
     {% endif %}
@@ -39,7 +39,7 @@
         </tr>
         {% for val in obj %}
         <tr>
-          <td> 1 </td>
+          <td> {{ val['rank'] }} </td>
           <td> <a target='_blank' href='/compare?compare_with={{ val["name"] }}&contestcode={{ contest_code }}'>{{ val['name'] }}</a></td>
           <td> {{ val["Total Score"] }} </td>
           <td> {{ val["Penalty"] }} </td>
