@@ -19,6 +19,13 @@ def diff(t1 , t2):
 	p = t2 - t1
 	return p.total_seconds()
 
+def diff1(t1 , t2):
+	fmt = '%Y-%m-%d %H:%M:%S'
+	tstamp1 = datetime.datetime.strptime(str(t1), fmt)
+	tstamp2 = datetime.datetime.strptime(str(t2), fmt)
+	p = tstamp2 - tstamp1
+	return p.total_seconds()
+
 def activate_access_token():
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
@@ -237,15 +244,16 @@ def fetch_submission():
 		f.close()	
 
 
-def compare_results(compare_with, contestcode):
+def compare_results(compare_with, contestcode , curr_time):
 
 	username = session['username']
 
-	from session import problems, contest_start_time
+	from session import problems, contest_start_time , v_contest_start_time 
 	from datetime import datetime
 
 	fmt = '%Y-%m-%d %H:%M:%S'
-
+	v_contest_start_time = time_slice(v_contest_start_time)
+	curr_time = time_slice(curr_time)
 	data_dict = dict()
 	username2 = compare_with
 
@@ -255,6 +263,10 @@ def compare_results(compare_with, contestcode):
 		x = db[contestcode].find({'username':username,'problemCode':str(i)})
 		flag = False
 		for k in x:
+			time_diff1 = diff1(v_contest_start_time , curr_time)
+			time_diff2 = diff1(contest_start_time , k['date'])
+			if time_diff2 > time_diff1:
+				break
 			if(k['result'] == 'AC'):
 				date = k['date']
 				tstamp1 = datetime.strptime(contest_start_time, fmt)
@@ -273,6 +285,10 @@ def compare_results(compare_with, contestcode):
 		x = db[contestcode].find({'username':username2,'problemCode':str(i)})
 		flag = False
 		for k in x:
+			time_diff1 = diff1(v_contest_start_time , curr_time)
+			time_diff2 = diff1(contest_start_time , k['date'])
+			if time_diff2 > time_diff1:
+				break
 			if(k['result'] == 'AC'):
 				date = k['date']
 				tstamp1 = datetime.strptime(contest_start_time, fmt)

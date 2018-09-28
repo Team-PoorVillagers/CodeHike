@@ -209,7 +209,7 @@ def compare():
     compare_with = request.args.get("compare_with")
     contestcode = request.args.get("contestcode")
 
-    u1data= compare_results(compare_with, contestcode)
+    u1data= compare_results(compare_with, contestcode , datetime.datetime.now())
     username = session['username']
     return render_template("compare.html", username = username, u1data = u1data, compare_with = compare_with, contestcode = contestcode)
 

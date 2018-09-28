@@ -36,14 +36,20 @@
         else{
         console.log(timer);
         console.log(timeleft);
-        timer.html('Time left : ' + convertSeconds(timeleft - counter));
+        // timer.html('Time left : ' + convertSeconds(timeleft - counter));
 
         // var interval = setInterval(timeIt, 1000);
 
         function timeIt() {
           counter++;
+          if(timeleft - counter < 0){
+              alert("The Contest has ended.Refresh the page for see the final standings");
+              return;
+          }
+          else{
           // currentTime = floor((millis() - startTime) / 1000);
-          timer.html('Time left : ' + convertSeconds(timeleft - counter));
+            timer.html('Time left : ' + convertSeconds(timeleft - counter));
+          }
           // if (currentTime == timeleft) {
               // ding.play();
               // clearInterval(interval);
