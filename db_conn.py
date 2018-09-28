@@ -2,8 +2,11 @@ import pymongo, os
 
 passw = os.environ['DB_PASSKEY']
 
-uri_string =  "mongodb://root:"+str(passw)+"@dds-6gj13ff1b21a36b41209-pub.mongodb.ap-south-1.rds.aliyuncs.com:3717,dds-6gj13ff1b21a36b42533-pub.mongodb.ap-south-1.rds.aliyuncs.com:3717/admin?replicaSet=mgset-1050001983"
 
+# ADD URI STRING HERE ###################################
+uri_string =  ""
+
+#########################################################
 client = pymongo.MongoClient(uri_string)
 
 db = client.db

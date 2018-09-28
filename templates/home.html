@@ -5,6 +5,55 @@
 
 {% block header %}
 
+<script>
+function check(form) 
+	{
+    var str = form.contestcode.value;
+    str = str.toUpperCase();
+    //alert(str);
+    var coderegex = /^COOK[0-9][1-9](A|B)?$/;
+    Result = coderegex.test(str);
+    
+    var flag = 0;
+    var len = str.length;
+    //alert(Result);
+    //alert(len);
+    if(Result == true)
+    {
+    	res = str.match(/\d+/g).map(Number);
+        if(res > 91)
+        {
+        	var pp = str.slice(-1);
+        	if(pp == 'A' || pp == 'B')
+            {
+            	if(len == 7)
+                {
+                    flag = 1;
+               	}
+            }
+        }
+        else
+        {
+            if(len == 6)
+            {
+                flag = 1;
+            }
+    	}
+    }
+        
+    if(flag == 0)
+    {
+    	window.alert("The possible value of contest code is - \n\n- COOK01 .. COOK09\n- COOK11 .. COOK91\n- COOK92A/B .. COOK98A/B\n");
+    	return false;
+    }
+    else
+    {
+    	return true;
+    }
+    
+}
+</script>
+
 	<h1 class="display-4">Hello!!</h1>
 	<h2 class="display-5">Create a Virtual Contest</h2>
 	<p class="lead">It enable the users to run the past contests in a special mode that would imitate a real competition, currently supporting Cookoffs.</p>
@@ -12,10 +61,10 @@
 	<p>It uses Codechef APIs to get details about past contest and conduct it in virtual environment, giving feel as if it was hosting at real time. Try it now!</p>
 	<p class="lead">
 
-	<form class="form-inline" action="/contest_welcome" method="GET">
+	<form name = "form_contestcode" class="form-inline" action="/contest_welcome" method="GET" onSubmit="return check(form_contestcode)" >
 	  <div class="form-group mx-sm-3 mb-2">
 	    <label for="inputPassword2" class="sr-only">Enter a CookOff Contest Code</label>
-	    <input type="text" class="form-control" placeholder="eg. COOK95A, COOK72" name="contestcode">
+	    <input type="text" class="form-control" placeholder="eg. COOK95A, COOK72" name="contestcode" required>
 	    &nbsp;&nbsp;
 		<button type="submit" class="btn btn-primary">Submit</button>
 	  </div>
