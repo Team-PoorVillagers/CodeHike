@@ -260,7 +260,7 @@ def compare_results(compare_with, contestcode , curr_time):
 	for i in problems:
 		tries = 0
 		kk = []
-		x = db[contestcode].find({'username':username,'problemCode':str(i)})
+		x = db[contestcode].find({'username':username,'problemCode':str(i)}).sort('id')
 		flag = False
 		for k in x:
 			time_diff1 = diff1(v_contest_start_time , curr_time)
@@ -282,7 +282,7 @@ def compare_results(compare_with, contestcode , curr_time):
 			oo = [tries]
 			kk.append(oo)
 		tries = 0
-		x = db[contestcode].find({'username':username2,'problemCode':str(i)})
+		x = db[contestcode].find({'username':username2,'problemCode':str(i)}).sort('id')
 		flag = False
 		for k in x:
 			time_diff1 = diff1(v_contest_start_time , curr_time)

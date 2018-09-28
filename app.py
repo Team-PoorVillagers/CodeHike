@@ -57,6 +57,9 @@ def friends():
 
 @app.route("/contestpage/<contest_code>")
 def contest_page(contest_code):
+    if(session['is_contest_running'] == False):
+            username = session['username']
+            return render_template("home.html", username = username, contest_code_display = False)
     x = return_contest_details(contest_code)
     fmt = '%Y-%m-%d %H:%M:%S'
     s_d = datetime.datetime.strptime(x['start_date'], fmt)
@@ -82,7 +85,9 @@ def contest_page(contest_code):
 
 @app.route("/standings", methods=['GET'])
 def current_standing():
-
+    if(session['is_contest_running'] == False):
+            username = session['username']
+            return render_template("home.html", username = username, contest_code_display = False)
     friends = request.args.get("friends")
 
     # if friends == True, then user wants friends ranklist, each case you need
@@ -100,10 +105,28 @@ def current_standing():
     fetch_submission()
     obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , now , friends)
     username = session['username']
-    return render_template("rankings.html", obj=obj , problems = problems, username = username, contest_code = contest_code, contest_code_display = True , friends = friends)
+    user = {}
+    user['rank'] = 0
+    user['name'] = username
+    user['entry'] = False
+    user['Total Score'] = 0
+    user['Penalty'] = 0
+    user['Total'] = 0
+    for problem in problems:
+        user[problem] = 0
+        user[problem+"Time"] = 0
+    friend = user
+    for val in obj:
+        if val['name'] == username:
+            friend = val
+            break            
+    return render_template("rankings.html", obj=obj , problems = problems, username = username, contest_code = contest_code, contest_code_display = True , friends = friends , friend = friend)
 
 @app.route("/problem/<contest_code>/<problem_code>")
 def problem_details(contest_code, problem_code):
+    if(session['is_contest_running'] == False):
+            username = session['username']
+            return render_template("home.html", username = username, contest_code_display = False)
     x = return_problem_details(contest_code, problem_code)
     username = session['username']
     return render_template('problem.html', name = x['name'], timelimit = x['timelimit'], \

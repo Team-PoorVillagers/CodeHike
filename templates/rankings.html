@@ -37,6 +37,15 @@
                 <td>{{ problem }}</td>
             {% endfor %}
         </tr>
+        <tr bgcolor="#bdc3c7">
+          <td> {{ friend['rank'] }} </td>
+          <td> {{ friend['name'] }}</a></td>
+          <td> {{ friend["Total Score"] }} </td>
+          <td> {{ friend["Penalty"] }} </td>
+          {% for problem in problems %}
+            <td> {{ friend[problem] }} </td>
+          {% endfor %}
+        </tr>
         {% for val in obj %}
         <tr>
           <td> {{ val['rank'] }} </td>
