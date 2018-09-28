@@ -6,15 +6,21 @@ import json
 import os
 app = Flask(__name__)
 
+
 @app.route("/")
 def main_page():
     if not session.get('logged_in'):
+        session['is_contest_running'] = False
         field = db['app_data'].find()
         app_data = field[0]
         return render_template("home-no-login.html", client_id = app_data["client_id"], redirect_uri = app_data["redirect_uri"])
-    else:
-        username = session['username']
-        return render_template("home.html", username = username, contest_code_display = False)
+    else :
+        if(session['is_contest_running'] == False):
+            username = session['username']
+            return render_template("home.html", username = username, contest_code_display = False)
+        else:
+            from session import contest_code
+            return redirect(url_for('contest_page',contest_code = contest_code))
 
 
 @app.route('/auth', methods=['GET'])
@@ -164,6 +170,8 @@ def begin_contest():
 
     username = session['username']
 
+    session['is_contest_running'] = True
+
     return redirect(url_for('contest_page',contest_code = contest_code, username = username, contest_code_display = True))
 
 @app.route("/add_friend" , methods = ['GET'])
@@ -212,6 +220,12 @@ def compare():
     u1data= compare_results(compare_with, contestcode , datetime.datetime.now())
     username = session['username']
     return render_template("compare.html", username = username, u1data = u1data, compare_with = compare_with, contestcode = contestcode)
+
+@app.route("/end_contest")
+def end_contest():
+    session['is_contest_running'] = False
+    return redirect(url_for('main_page'))
+
 
 
 if __name__ == "__main__":

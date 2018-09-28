@@ -11,7 +11,7 @@ function check(form)
     var str = form.contestcode.value;
     str = str.toUpperCase();
     //alert(str);
-    var coderegex = /^COOK[0-9][1-9](A|B)?$/;
+    var coderegex = /^COOK[0-9][0-9](A|B)?$/;
     Result = coderegex.test(str);
     
     var flag = 0;
@@ -32,7 +32,7 @@ function check(form)
                	}
             }
         }
-        else
+        else if(res >= 1)
         {
             if(len == 6)
             {
