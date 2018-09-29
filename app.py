@@ -31,7 +31,8 @@ def do_login():
         session['logged_in'] = True
         # get_my_details()
     else:
-        flash('wrong password!')
+        pass
+        # flash('wrong password!')
     return main_page()
 
 @app.route("/logout")
@@ -66,14 +67,14 @@ def contest_page(contest_code):
     if(session['is_contest_running'] == False):
             username = session['username']
             return render_template("home.html", username = username, contest_code_display = False)
-    x = return_contest_details(contest_code)
+    # x = return_contest_details(contest_code)
     fmt = '%Y-%m-%d %H:%M:%S'
-    s_d = datetime.datetime.strptime(x['start_date'], fmt)
-    e_d = datetime.datetime.strptime(x['end_date'], fmt)
-    diff = e_d - s_d
-    diff = diff.total_seconds()/60
+    # s_d = datetime.datetime.strptime(x['start_date'], fmt)
+    # e_d = datetime.datetime.strptime(x['end_date'], fmt)
+    # diff = e_d - s_d
+    # diff = diff.total_seconds()/60
 
-    from session import problems,v_contest_start_time,contest_start_time,duration
+    from session import problems,v_contest_start_time,contest_start_time,duration, contest_name, contest_end_time, contest_code
 
     time_now = time_slice(datetime.datetime.now())
     v_contest_start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
@@ -87,7 +88,7 @@ def contest_page(contest_code):
     fetch_submission()
     obj = dashboard(contest_code , problems  , contest_start_time , v_contest_start_time , time_now)
     username = session['username']
-    return render_template("contestpage.html",contest_code = contest_code, name = x['name'], mins = diff, problems = x['problems'] , obj = obj , time = p, username = username, contest_code_display = True)
+    return render_template("contestpage.html",contest_code = contest_code, name = contest_name, mins = duration, problems = problems , obj = obj , time = p, username = username, contest_code_display = True)
 
 @app.route("/standings", methods=['GET'])
 def current_standing():
@@ -156,13 +157,14 @@ def problem_details(contest_code, problem_code):
 @app.route("/contest_welcome", methods=['GET'])
 def welcome_page():
     contest_code = request.args.get("contestcode")
-    contest_code.upper()
+    contest_code = contest_code.upper()
 
     obj = return_contest_details(contest_code)
     fmt = '%Y-%m-%d %H:%M:%S'
     s_d = datetime.datetime.strptime(obj['start_date'], fmt)
     e_d = datetime.datetime.strptime(obj['end_date'], fmt)
     duration = e_d - s_d
+    contest_name = obj['name']
     duration = duration.total_seconds()/60
 
     submissions = {}
@@ -178,6 +180,7 @@ def welcome_page():
         file.write("contest_end_time = '"+str(e_d)+"'\n")
         file.write("duration = '"+str(duration)+"'\n")
         file.write("contest_code = '"+str(contest_code)+"'\n")
+        file.write("contest_name = '"+str(contest_name)+"'\n")
     file.close()
 
     json_data = json.dumps(submissions)
@@ -219,8 +222,7 @@ def add_friend():
     url = "https://api.codechef.com/users/" + name
     data = requests.get(url=url,headers=headers)
     data = data.json()
-    print("\n\n\n\n")
-    print(data)
+    # print(data)
     isvalid = False
     if(data['result']['data']['code'] == 9001):
         isvalid = True    

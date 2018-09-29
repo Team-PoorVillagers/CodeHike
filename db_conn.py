@@ -2,8 +2,9 @@ import pymongo, os
 
 passw = os.environ['DB_PASSKEY']
 
+
 # ADD URI STRING HERE ###################################
-uri_string =  
+uri_string =  ""
 #########################################################
 client = pymongo.MongoClient(uri_string)
 
