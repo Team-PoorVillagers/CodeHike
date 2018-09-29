@@ -9,20 +9,19 @@ app = Flask(__name__)
 
 @app.route("/")
 def main_page():
-    username = session['username']
-    user_data = db['user_data'].find({'_id':username})
-    user_data = user_data[0]
-    v_contest_start_time = user_data['v_contest_start_time']
-    contest_start_time = user_data['contest_start_time']
-    duration = user_data['duration']
-    is_running = user_data['is_running']
-    contest_code = user_data['contest_code']
-    contest_name = user_data['contest_name']
     if not session.get('logged_in'):
         field = db['app_data'].find()
         app_data = field[0]
         return render_template("home-no-login.html", client_id = app_data["client_id"], redirect_uri = app_data["redirect_uri"])
     else :
+        username = session['username']
+        user_data = db['user_data'].find_one({'_id':username})
+        v_contest_start_time = user_data['v_contest_start_time']
+        contest_start_time = user_data['contest_start_time']
+        duration = user_data['duration']
+        is_running = user_data['is_running']
+        contest_code = user_data['contest_code']
+        contest_name = user_data['contest_name']
         if(is_running == False):
             return render_template("home.html", username = username, contest_code_display = False)
         else:
@@ -55,8 +54,7 @@ def aboutus():
 def friends():
     display_contest_code = True
     username = session['username']
-    user_data = db['user_data'].find({'_id':username})
-    user_data = user_data[0]
+    user_data = db['user_data'].find_one({'_id':username})
     contest_code = user_data['contest_code']
     if contest_code:
         #DO nothing
@@ -76,8 +74,7 @@ def friends():
 @app.route("/contestpage/<contest_code>")
 def contest_page(contest_code):
     username = session['username']
-    user_data = db['user_data'].find({'_id':username})
-    user_data = user_data[0]
+    user_data = db['user_data'].find_one({'_id':username})
     v_contest_start_time = user_data['v_contest_start_time']
     contest_start_time = user_data['contest_start_time']
     duration = user_data['duration']
@@ -105,8 +102,7 @@ def contest_page(contest_code):
 @app.route("/standings", methods=['GET'])
 def current_standing():
     username = session['username']
-    user_data = db['user_data'].find({'_id':username})
-    user_data = user_data[0]
+    user_data = db['user_data'].find_one({'_id':username})
     v_contest_start_time = user_data['v_contest_start_time']
     contest_start_time = user_data['contest_start_time']
     duration = user_data['duration']
@@ -152,8 +148,7 @@ def current_standing():
 @app.route("/problem/<contest_code>/<problem_code>")
 def problem_details(contest_code, problem_code):
     username = session['username']
-    user_data = db['user_data'].find({'_id':username})
-    user_data = user_data[0]
+    user_data = db['user_data'].find_one({'_id':username})
     v_contest_start_time = user_data['v_contest_start_time']
     contest_start_time = user_data['contest_start_time']
     duration = user_data['duration']
@@ -238,9 +233,7 @@ def begin_contest():
 def add_friend():
 
     username = session['username']
-    user_data = db['user_data'].find({'_id':username})
-    user_data = user_data[0]
-
+    user_data = db['user_data'].find_one({'_id':username})
     headers = {
     'content-type': 'application/json',
     'Authorization': 'Bearer {}'.format(user_data["access_token"])
@@ -265,8 +258,7 @@ def add_friend():
 @app.route("/delete_friend" , methods = ['GET'])
 def delete_friend():
     username = session['username']
-    user_data = db['user_data'].find({'_id':username})
-    user_data = user_data[0]
+    user_data = db['user_data'].find_one({'_id':username})
     name = request.args.get('username')
     friends = user_data['friends']
     for i in range(0 , len(friends)):

@@ -37,9 +37,7 @@ def convert(t):
 
 def activate_access_token():
 	username = session['username']
-	user_data = db['user_data'].find({'_id':username})
-	user_data = user_data[0]
-
+	user_data = db['user_data'].find_one({'_id':username})
 	if(user_data['generated_on'] != ""):
 		fmt = '%Y-%m-%d %H:%M:%S.%f'
 		tstamp1 = datetime.datetime.strptime(user_data['generated_on'], fmt)
@@ -59,8 +57,7 @@ def get_access_token():
 	app_data = field[0]
 
 	username = session['username']
-	user_data = db['user_data'].find({'_id':username})
-	user_data = user_data[0]
+	user_data = db['user_data'].find_one({'_id':username})
 
 	url = 'https://api.codechef.com/oauth/token'
 
@@ -130,8 +127,7 @@ def return_contest_details(contest_code):
 	A json variable with values.
 	"""
 	username = session['username']
-	user_data = db['user_data'].find({'_id':username})
-	user_data = user_data[0]
+	user_data = db['user_data'].find_one({'_id':username})
 
 	headers = {
 	'content-type': 'application/json',
@@ -159,8 +155,7 @@ def return_contest_details(contest_code):
 def return_problem_details(contest_code, problem_code):
 	activate_access_token()
 	username = session['username']
-	user_data = db['user_data'].find({'_id':username})
-	user_data = user_data[0]
+	user_data = db['user_data'].find_one({'_id':username})
 
 	headers = {
 	'content-type': 'application/json',
@@ -195,8 +190,7 @@ def fetch_submission():
 
 	fmt = '%Y-%m-%d %H:%M:%S'
 	username = session['username']
-	user_data = db['user_data'].find({'_id':username})
-	user_data = user_data[0]
+	user_data = db['user_data'].find_one({'_id':username})
 	v_contest_start_time = user_data['v_contest_start_time']
 	contest_start_time = user_data['contest_start_time']
 	duration = user_data['duration']
@@ -247,8 +241,7 @@ def fetch_submission():
 def compare_results(compare_with, contestcode , curr_time):
 
 	username = session['username']
-	user_data = db['user_data'].find({'_id':username})
-	user_data = user_data[0]
+	user_data = db['user_data'].find_one({'_id':username})
 	v_contest_start_time = user_data['v_contest_start_time']
 	contest_start_time = user_data['contest_start_time']
 	duration = user_data['duration']
