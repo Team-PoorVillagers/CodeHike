@@ -10,7 +10,6 @@ app = Flask(__name__)
 @app.route("/")
 def main_page():
     if not session.get('logged_in'):
-        session['is_contest_running'] = False
         field = db['app_data'].find()
         app_data = field[0]
         return render_template("home-no-login.html", client_id = app_data["client_id"], redirect_uri = app_data["redirect_uri"])
@@ -29,6 +28,7 @@ def do_login():
     x = verify_login(auth_token)
     if (x == True):
         session['logged_in'] = True
+        session['is_contest_running'] = False
         # get_my_details()
     else:
         flash('wrong password!')
@@ -113,7 +113,7 @@ def current_standing():
     username = session['username']
     user = {}
     user['rank'] = 0
-    user['name'] = username
+    user['name'] = '*' + username
     user['entry'] = False
     user['Total Score'] = 0
     user['Penalty'] = 0
@@ -123,7 +123,7 @@ def current_standing():
         user[problem+"Time"] = 0
     friend = user
     for val in obj:
-        if val['name'] == username:
+        if val['name'] == '*' + username:
             friend = val
             break            
     return render_template("rankings.html", obj=obj , problems = problems, username = username, contest_code = contest_code, contest_code_display = True , friends = friends , friend = friend)
@@ -219,8 +219,8 @@ def add_friend():
     url = "https://api.codechef.com/users/" + name
     data = requests.get(url=url,headers=headers)
     data = data.json()
-    print("\n\n\n\n")
-    print(data)
+    # print("\n\n\n\n")
+    # print(data)
     isvalid = False
     if(data['result']['data']['code'] == 9001):
         isvalid = True    

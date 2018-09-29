@@ -34,10 +34,10 @@
             <td>Total Score</td>
             <td>Penalty</td>
             {% for problem in problems %}
-                <td>{{ problem }}</td>
+                <td><a href = '/problem/{{ contest_code }}/{{ problem }}'>{{ problem }}</a></td>
             {% endfor %}
         </tr>
-        <tr bgcolor="#bdc3c7">
+        <tr bgcolor="#44bd32">
           <td> {{ friend['rank'] }} </td>
           <td> {{ friend['name'] }}</a></td>
           <td> {{ friend["Total Score"] }} </td>

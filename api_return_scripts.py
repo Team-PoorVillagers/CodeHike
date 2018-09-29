@@ -26,6 +26,15 @@ def diff1(t1 , t2):
 	p = tstamp2 - tstamp1
 	return p.total_seconds()
 
+def convert(t):
+	t = int(t)
+	hour = t//3600
+	t%=3600
+	mint = t//60
+	t%=60
+	sec = t
+	return str(hour)+":"+str(mint)+":"+str(sec)
+
 def activate_access_token():
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
@@ -256,11 +265,10 @@ def compare_results(compare_with, contestcode , curr_time):
 	curr_time = time_slice(curr_time)
 	data_dict = dict()
 	username2 = compare_with
-
 	for i in problems:
 		tries = 0
 		kk = []
-		x = db[contestcode].find({'username':username,'problemCode':str(i)}).sort('id')
+		x = db[contestcode].find({'username':'*'+username,'problemCode':str(i)}).sort('id')
 		flag = False
 		for k in x:
 			time_diff1 = diff1(v_contest_start_time , curr_time)
@@ -272,7 +280,7 @@ def compare_results(compare_with, contestcode , curr_time):
 				tstamp1 = datetime.strptime(contest_start_time, fmt)
 				tstamp2 = datetime.strptime(date, fmt)
 				td = tstamp2 - tstamp1
-				td_mins = int(round(td.total_seconds() / 60))
+				td_mins = convert(td.total_seconds())
 				oo = [td_mins, k['time'], k['language'], tries]
 				kk.append(oo)
 				flag = True
@@ -294,7 +302,7 @@ def compare_results(compare_with, contestcode , curr_time):
 				tstamp1 = datetime.strptime(contest_start_time, fmt)
 				tstamp2 = datetime.strptime(date, fmt)
 				td = tstamp2 - tstamp1
-				td_mins = int(round(td.total_seconds() / 60))
+				td_mins = convert(td.total_seconds())
 				oo = [td_mins, k['time'], k['language'], tries]
 				kk.append(oo)
 				flag = True
