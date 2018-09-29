@@ -19,6 +19,7 @@
 </head>
 
 <body>
+
 <section class="content">
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -65,13 +66,25 @@
 
   {% block header %}{% endblock %}
 
-
   <hr class="my-4">
-  <center>Made with ♥ by Hasan(<a  href="https://github.com/hasan356">@hasan356</a>) and Vishva Nath(<a  href="https://github.com/vishvanath45">@vishvanath45</a>)</center>
+  <center>Made with <a id="loltext"> </a> by <a id="lolhasan"> </a> Hasan<a  href="https://github.com/hasan356"> @hasan356</a> and 🐒 Vishva Nath<a  href="https://github.com/vishvanath45"> @vishvanath45</a></center>
   </div>
   </header>
 
   {% block content %}{% endblock %}
+
+
+<script>
+var items = Array("🎧 ", "🍪", "❤️", "☯️", "🍻", "💻", "🔥", "laughter and happiness", "🌑 💻 ☀️", "😴  + 😌");
+var hasan_ = Array("🐫", "🐧", "🐢", "🙇" );
+
+var randv = items[Math.floor(Math.random() * items.length)];
+var hasan2 = hasan_[Math.floor(Math.random() * hasan_.length)];
+
+document.getElementById("loltext").innerHTML = randv;
+document.getElementById("lolhasan").innerHTML = hasan2;
+</script>
+
 
 </section>
 </body>
