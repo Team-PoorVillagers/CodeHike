@@ -21,7 +21,6 @@ def main_page():
             from session import contest_code
             return redirect(url_for('contest_page',contest_code = contest_code))
 
-
 @app.route('/auth', methods=['GET'])
 def do_login():
     auth_token = request.args.get("code")
@@ -38,6 +37,9 @@ def do_login():
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
+    session.clear()
+    open('session.py', 'w').close()
+    open('submissions.json', 'w').close()
     return main_page()
 
 @app.route("/aboutus")
