@@ -9,16 +9,23 @@ app = Flask(__name__)
 
 @app.route("/")
 def main_page():
+    username = session['username']
+    user_data = db['user_data'].find({'_id':username})
+    user_data = user_data[0]
+    v_contest_start_time = user_data['v_contest_start_time']
+    contest_start_time = user_data['contest_start_time']
+    duration = user_data['duration']
+    is_running = user_data['is_running']
+    contest_code = user_data['contest_code']
+    contest_name = user_data['contest_name']
     if not session.get('logged_in'):
         field = db['app_data'].find()
         app_data = field[0]
         return render_template("home-no-login.html", client_id = app_data["client_id"], redirect_uri = app_data["redirect_uri"])
     else :
-        if(session['is_contest_running'] == False):
-            username = session['username']
+        if(is_running == False):
             return render_template("home.html", username = username, contest_code_display = False)
         else:
-            from session import contest_code
             return redirect(url_for('contest_page',contest_code = contest_code))
 
 
@@ -28,7 +35,6 @@ def do_login():
     x = verify_login(auth_token)
     if (x == True):
         session['logged_in'] = True
-        session['is_contest_running'] = False
         # get_my_details()
     else:
         pass
@@ -48,9 +54,14 @@ def aboutus():
 @app.route("/friends")
 def friends():
     display_contest_code = True
-    try:
-        from session import contest_code
-    except:
+    username = session['username']
+    user_data = db['user_data'].find({'_id':username})
+    user_data = user_data[0]
+    contest_code = user_data['contest_code']
+    if contest_code:
+        #DO nothing
+        display_contest_code = True
+    else:
         display_contest_code = False
         contest_code = False
 
@@ -64,35 +75,46 @@ def friends():
 
 @app.route("/contestpage/<contest_code>")
 def contest_page(contest_code):
-    if(session['is_contest_running'] == False):
+    username = session['username']
+    user_data = db['user_data'].find({'_id':username})
+    user_data = user_data[0]
+    v_contest_start_time = user_data['v_contest_start_time']
+    contest_start_time = user_data['contest_start_time']
+    duration = user_data['duration']
+    is_running = user_data['is_running']
+    contest_code = user_data['contest_code']
+    contest_name = user_data['contest_name']
+    problems = user_data['problems']
+    if(is_running == False):
             username = session['username']
             return render_template("home.html", username = username, contest_code_display = False)
-    # x = return_contest_details(contest_code)
     fmt = '%Y-%m-%d %H:%M:%S'
-    # s_d = datetime.datetime.strptime(x['start_date'], fmt)
-    # e_d = datetime.datetime.strptime(x['end_date'], fmt)
-    # diff = e_d - s_d
-    # diff = diff.total_seconds()/60
-
-    from session import problems,v_contest_start_time,contest_start_time,duration, contest_name, contest_end_time, contest_code
-
     time_now = time_slice(datetime.datetime.now())
-    v_contest_start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
+    v_contest_start_time = datetime.datetime.strptime(str(v_contest_start_time), fmt + ".%f")
     end_time = v_contest_start_time + datetime.timedelta(minutes = int(float(duration)))
     v_contest_start_time = time_slice(v_contest_start_time)
     end_time = time_slice(end_time)
-    tstamp1 = datetime.datetime.strptime(time_now , fmt)
-    tstamp2 = datetime.datetime.strptime(end_time , fmt)
+    tstamp1 = datetime.datetime.strptime(str(time_now) , fmt)
+    tstamp2 = datetime.datetime.strptime(str(end_time) , fmt)
     p = tstamp2 - tstamp1
     p = p.total_seconds()
     fetch_submission()
     obj = dashboard(contest_code , problems  , contest_start_time , v_contest_start_time , time_now)
-    username = session['username']
     return render_template("contestpage.html",contest_code = contest_code, name = contest_name, mins = duration, problems = problems , obj = obj , time = p, username = username, contest_code_display = True)
 
 @app.route("/standings", methods=['GET'])
 def current_standing():
-    if(session['is_contest_running'] == False):
+    username = session['username']
+    user_data = db['user_data'].find({'_id':username})
+    user_data = user_data[0]
+    v_contest_start_time = user_data['v_contest_start_time']
+    contest_start_time = user_data['contest_start_time']
+    duration = user_data['duration']
+    is_running = user_data['is_running']
+    contest_code = user_data['contest_code']
+    contest_name = user_data['contest_name']
+    problems = user_data['problems']
+    if(is_running == False):
             username = session['username']
             return render_template("home.html", username = username, contest_code_display = False)
     friends = request.args.get("friends")
@@ -102,8 +124,6 @@ def current_standing():
     # if friends variable is True, that means data you sent is of friends.
     # there might be confusion as both GET variable and varible which we are sending 
     # both are named as friends.
-
-    from session import problems,v_contest_start_time,contest_start_time,duration,contest_code
     fmt = '%Y-%m-%d %H:%M:%S'
     v_contest_start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
     v_contest_start_time = time_slice(v_contest_start_time)
@@ -131,11 +151,20 @@ def current_standing():
 
 @app.route("/problem/<contest_code>/<problem_code>")
 def problem_details(contest_code, problem_code):
-    if(session['is_contest_running'] == False):
+    username = session['username']
+    user_data = db['user_data'].find({'_id':username})
+    user_data = user_data[0]
+    v_contest_start_time = user_data['v_contest_start_time']
+    contest_start_time = user_data['contest_start_time']
+    duration = user_data['duration']
+    is_running = user_data['is_running']
+    contest_code = user_data['contest_code']
+    contest_name = user_data['contest_name']
+    problems = user_data['problems']
+    if(is_running == False):
             username = session['username']
             return render_template("home.html", username = username, contest_code_display = False)
     x = return_problem_details(contest_code, problem_code)
-    username = session['username']
     return render_template('problem.html', name = x['name'], timelimit = x['timelimit'], \
         sizelimit = x['sizelimit'], statement = x['body'], username = username, problem_code = problem_code ,contest_code = contest_code, contest_code_display = True)
 
@@ -156,6 +185,8 @@ def problem_details(contest_code, problem_code):
 
 @app.route("/contest_welcome", methods=['GET'])
 def welcome_page():
+    
+    username = session['username']
     contest_code = request.args.get("contestcode")
     contest_code = contest_code.upper()
 
@@ -168,26 +199,25 @@ def welcome_page():
     duration = duration.total_seconds()/60
 
     submissions = {}
+    for i in obj['problems']:
+        submissions[i] = []
 
-    with open('session.py', "w") as file:
-        file.write("problems = [ ")
-        for i in obj['problems']:
-            submissions[i] = []
-            file.write("'"+i+"'")
-            file.write(" , ")
-        file.write(" ] \n")
-        file.write("contest_start_time = '"+str(s_d)+"'\n")
-        file.write("contest_end_time = '"+str(e_d)+"'\n")
-        file.write("duration = '"+str(duration)+"'\n")
-        file.write("contest_code = '"+str(contest_code)+"'\n")
-        file.write("contest_name = '"+str(contest_name)+"'\n")
-    file.close()
+    db['user_data'].update_one({'_id': username}, {'$set': {'problems' : obj['problems'] , 'contest_start_time' : s_d , 'contest_end_time' : e_d , 'duration' : duration , 'contest_code' : contest_code , 'contest_name' : contest_name , 'submissions' : submissions}})
 
-    json_data = json.dumps(submissions)
-    with open('submissions.json' , "w+") as f:
-        f.write(json_data)
+    # with open('session.py', "w+") as file:
+    #     file.write("problems = [ ")
+    #     for i in obj['problems']:
+    #         submissions[i] = []
+    #         file.write("'"+i+"'")
+    #         file.write(" , ")
+    #     file.write(" ] \n")
+    #     file.write("contest_start_time = '"+str(s_d)+"'\n")
+    #     file.write("contest_end_time = '"+str(e_d)+"'\n")
+    #     file.write("duration = '"+str(duration)+"'\n")
+    #     file.write("contest_code = '"+str(contest_code)+"'\n")
+    #     file.write("contest_name = '"+str(contest_name)+"'\n")
+    # file.close()
 
-    username = session['username']
 
     return render_template("contest_welcome.html" ,contest_code = contest_code,\
      name = obj['name'], mins = duration, s_d = s_d, e_d = e_d , username = username ,contest_code_display = False )
@@ -197,13 +227,11 @@ def begin_contest():
     contest_code = request.form['contestcode']
     v_contest_start_time = str(datetime.datetime.now())
     
-    with open('session.py', "a") as file:
-        file.write("v_contest_start_time = '"+v_contest_start_time+"'\n")
+    # with open('session.py', "a") as file:
+    #     file.write("v_contest_start_time = '"+v_contest_start_time+"'\n")
 
     username = session['username']
-
-    session['is_contest_running'] = True
-
+    db['user_data'].update_one({'_id': username}, {'$set': {'v_contest_start_time': v_contest_start_time , 'is_running' : True}})
     return redirect(url_for('contest_page',contest_code = contest_code, username = username, contest_code_display = True))
 
 @app.route("/add_friend" , methods = ['GET'])
@@ -260,7 +288,9 @@ def compare():
 
 @app.route("/end_contest")
 def end_contest():
-    session['is_contest_running'] = False
+    username = session['username']
+    user_data = db['user_data'].find({'_id':username})
+    db['user_data'].update_one({'_id': username}, {'$set': {'problems' : list() , 'contest_start_time' : None , 'contest_end_time' : None , 'duration' : None , 'contest_code' : None , 'contest_name' : None , 'v_contest_start_time' : None , 'is_running' : False    ,'submissions' : dict()}})
     return redirect(url_for('main_page'))
 
 

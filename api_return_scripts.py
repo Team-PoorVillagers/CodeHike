@@ -101,15 +101,17 @@ def verify_login(auth_token):
 	if(response['status'] != 'OK'):
 		return False
 	else:
+		session_list = []
+		# session_list = [{'problems' : list() , 'contest_start_time' : None , 'contest_end_time' : None , 'duration' : None , 'contest_code' : None , 'contest_name' : None , 'v_contest_start_time' : None}]
 		access_token = response['result']['data']['access_token']
 		refresh_token = response['result']['data']['refresh_token']
 		generated_on = str(datetime.datetime.now())
 		username = get_my_details(access_token)
 		if(db['user_data'].find_one({'_id':username}) == None):
 			db['user_data'].insert({'_id':username,'access_token':access_token,'refresh_token':refresh_token,
-				'generated_on':generated_on , 'friends' : list()})
+				'generated_on':generated_on , 'friends' : list() , 'problems' : list() , 'contest_start_time' : None , 'contest_end_time' : None , 'duration' : None , 'contest_code' : None , 'contest_name' : None , 'v_contest_start_time' : None , 'is_running' : False	,'submissions' : dict()})
 		else:
-			db['user_data'].update({'_id': username},{ '$set':{'access_token': access_token, 'refresh_token':refresh_token, 'generated_on':generated_on}}, upsert=False)
+			db['user_data'].update({'_id': username},{ '$set':{'access_token': access_token, 'refresh_token':refresh_token, 'generated_on':generated_on , 'problems' : list() , 'contest_start_time' : None , 'contest_end_time' : None , 'duration' : None , 'contest_code' : None , 'contest_name' : None , 'v_contest_start_time' : None , 'is_running' : False	,'submissions' : dict()}}, upsert=False)
 
 
 		session['username'] = username
@@ -156,7 +158,6 @@ def return_contest_details(contest_code):
 
 def return_problem_details(contest_code, problem_code):
 	activate_access_token()
-
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
 	user_data = user_data[0]
@@ -191,13 +192,19 @@ def get_my_details(access_token):
 
 
 def fetch_submission():
-	fmt = '%Y-%m-%d %H:%M:%S'
-	from session import problems , contest_start_time , contest_end_time ,v_contest_start_time,duration,contest_code
 
+	fmt = '%Y-%m-%d %H:%M:%S'
 	username = session['username']
 	user_data = db['user_data'].find({'_id':username})
 	user_data = user_data[0]
-
+	v_contest_start_time = user_data['v_contest_start_time']
+	contest_start_time = user_data['contest_start_time']
+	duration = user_data['duration']
+	is_running = user_data['is_running']
+	contest_code = user_data['contest_code']
+	contest_name = user_data['contest_name']
+	problems = user_data['problems']
+	submissions = user_data['submissions']
 	headers = {	
 	'content-type': 'application/json',
 	'Authorization': 'Bearer {}'.format(user_data["access_token"])
@@ -210,54 +217,45 @@ def fetch_submission():
 	parsed = data.json()
 	# print(parsed)
 	if parsed['result']['data']['code'] == 9001:
-		with open("submissions.json" , 'r') as f:
-			submissions = json.load(f)
-			for row in parsed['result']['data']['content']:
-				if row['problemCode'] in problems:
-					start_time = datetime.datetime.strptime(v_contest_start_time, fmt + ".%f")
-					end_time = start_time + datetime.timedelta(minutes = int(float(duration)))
-					start_time = time_slice(start_time)
-					end_time = time_slice(end_time)
-					start_time = datetime.datetime.strptime(start_time , fmt)
-					end_time = datetime.datetime.strptime(end_time , fmt)
-					sub_time = datetime.datetime.strptime(row['date'],fmt)
-					if sub_time>=start_time and sub_time<=end_time:
-						# print(start_time , end_time , sub_time)
-						if row['id'] not in submissions[row['problemCode']]:
-							collections = db[contest_code]
-							ind = 0
-							for row1 in collections.find():
-								rank_time = datetime.datetime.strptime(row1['date'] , fmt)
-								original_time = datetime.datetime.strptime(contest_start_time , fmt)
-								time_diff1 = diff(start_time , sub_time)
-								time_diff2 = diff(original_time , rank_time)
-								if time_diff1 > time_diff2:
-									ind = row1["id"]
-									break
-							# print(ind)
-							new_row  = {}
-							time_diff = diff(start_time , sub_time)
-							original_time = datetime.datetime.strptime(contest_start_time , fmt)
-							modify_time = original_time + datetime.timedelta(seconds = int(time_diff))
-							for val in collections.find_one():
-								if val!='_id':
-									new_row[val] = row[val]
-							new_row['date'] = str(modify_time)
-							new_row['username'] = '*' + username
-							collections.insert(new_row)
-							submissions[row['problemCode']].append(row['id'])
-							json_data = json.dumps(submissions)
-							with open('submissions.json' , "w+") as f1:
-								f1.write(json_data)
-							f1.close()
-		f.close()	
-
+		
+		for row in parsed['result']['data']['content']:
+			if row['problemCode'] in problems:
+				start_time = datetime.datetime.strptime(str(v_contest_start_time) , fmt + ".%f")
+				end_time = start_time + datetime.timedelta(minutes = int(float(duration)))
+				start_time = time_slice(start_time)
+				end_time = time_slice(end_time)
+				start_time = datetime.datetime.strptime(str(start_time) , fmt)
+				end_time = datetime.datetime.strptime(str(end_time) , fmt)
+				sub_time = datetime.datetime.strptime(str(row['date']),fmt)
+				if sub_time>=start_time and sub_time<=end_time:
+					# print(start_time , end_time , sub_time)
+					if row['id'] not in submissions[row['problemCode']]:
+						collections = db[contest_code]
+						new_row  = {}
+						time_diff = diff(start_time , sub_time)
+						original_time = datetime.datetime.strptime(str(contest_start_time) , fmt)
+						modify_time = original_time + datetime.timedelta(seconds = int(time_diff))
+						for val in collections.find_one():
+							if val!='_id':
+								new_row[val] = row[val]
+						new_row['date'] = str(modify_time)
+						new_row['username'] = '*' + username
+						collections.insert(new_row)
+						submissions[row['problemCode']].append(row['id'])
+						db['user_data'].update_one({'_id': username}, {'$set': {'submissions': submissions}})
 
 def compare_results(compare_with, contestcode , curr_time):
 
 	username = session['username']
-
-	from session import problems, contest_start_time , v_contest_start_time 
+	user_data = db['user_data'].find({'_id':username})
+	user_data = user_data[0]
+	v_contest_start_time = user_data['v_contest_start_time']
+	contest_start_time = user_data['contest_start_time']
+	duration = user_data['duration']
+	is_running = user_data['is_running']
+	contest_code = user_data['contest_code']
+	contest_name = user_data['contest_name'] 
+	problems = user_data['problems']
 	from datetime import datetime
 
 	fmt = '%Y-%m-%d %H:%M:%S'
@@ -277,8 +275,8 @@ def compare_results(compare_with, contestcode , curr_time):
 				break
 			if(k['result'] == 'AC'):
 				date = k['date']
-				tstamp1 = datetime.strptime(contest_start_time, fmt)
-				tstamp2 = datetime.strptime(date, fmt)
+				tstamp1 = datetime.strptime(str(contest_start_time), fmt)
+				tstamp2 = datetime.strptime(str(date), fmt)
 				td = tstamp2 - tstamp1
 				td_mins = convert(td.total_seconds())
 				oo = [td_mins, k['time'], k['language'], tries]
@@ -299,8 +297,8 @@ def compare_results(compare_with, contestcode , curr_time):
 				break
 			if(k['result'] == 'AC'):
 				date = k['date']
-				tstamp1 = datetime.strptime(contest_start_time, fmt)
-				tstamp2 = datetime.strptime(date, fmt)
+				tstamp1 = datetime.strptime(str(contest_start_time), fmt)
+				tstamp2 = datetime.strptime(str(date), fmt)
 				td = tstamp2 - tstamp1
 				td_mins = convert(td.total_seconds())
 				oo = [td_mins, k['time'], k['language'], tries]

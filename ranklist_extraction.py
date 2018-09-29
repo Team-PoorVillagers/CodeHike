@@ -9,8 +9,8 @@ from db_conn import db
 from flask import session
 def diff(t1 , t2):
 	fmt = '%Y-%m-%d %H:%M:%S'
-	tstamp1 = datetime.strptime(t1, fmt)
-	tstamp2 = datetime.strptime(t2, fmt)
+	tstamp1 = datetime.strptime(str(t1), fmt)
+	tstamp2 = datetime.strptime(str(t2), fmt)
 	p = tstamp2 - tstamp1
 	return p.total_seconds()
 def convert(t):
@@ -105,7 +105,6 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 	for val in current_rank_list:
 		for problem in problems_list:
 			val[problem+"Time"] = convert(val[problem+"Time"])
-	# print(current_rank_list)
 	return current_rank_list
 
 
