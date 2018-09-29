@@ -46,13 +46,19 @@ def aboutus():
 
 @app.route("/friends")
 def friends():
-    from session import contest_code
+    display_contest_code = True
+    try:
+        from session import contest_code
+    except:
+        display_contest_code = False
+        contest_code = False
+
     username = session['username']
     friends_data = db['user_data'].find_one({'_id':username})
     friends = friends_data['friends']
     for i in range(0 ,len(friends)):
         friends[i].insert(0 , i+1)
-    return render_template("friends.html" , friends = friends , username = username , contest_code_display = True , contest_code = contest_code)
+    return render_template("friends.html", friends = friends , username = username , contest_code_display = display_contest_code , contest_code = contest_code)
 
 
 @app.route("/contestpage/<contest_code>")
@@ -213,12 +219,19 @@ def add_friend():
     url = "https://api.codechef.com/users/" + name
     data = requests.get(url=url,headers=headers)
     data = data.json()
-    fullname = data['result']['data']['content']['fullname']
-    friends = user_data['friends']
-    if [name,fullname] not in friends and name not in [username]:
-        # print(name)
-        friends.append([name , fullname])
-        db['user_data'].update_one({'_id': username}, {'$set': {'friends': friends}})
+    print("\n\n\n\n")
+    print(data)
+    isvalid = False
+    if(data['result']['data']['code'] == 9001):
+        isvalid = True    
+        fullname = data['result']['data']['content']['fullname']
+        friends = user_data['friends']
+        if [name,fullname] not in friends and name not in [username]:
+            # print(name)
+            friends.append([name , fullname])
+            db['user_data'].update_one({'_id': username}, {'$set': {'friends': friends}})
+    if(isvalid == False):
+        flash('Oh snap! No such user exists.')
     return redirect(url_for('friends'))
 
 @app.route("/delete_friend" , methods = ['GET'])
