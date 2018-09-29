@@ -1,15 +1,37 @@
 import pymongo, os
+import csv
 
 passw = os.environ['DB_PASSKEY']
 
-
 # ADD URI STRING HERE ###################################
 uri_string =  ""
+
 #########################################################
+
 client = pymongo.MongoClient(uri_string)
 
 db = client.db
 
+# for code in range(28,92):
+# 	contest_code = "COOK" + str(code)
+# 	if contest_code not in db.collection_names():
+# 		db.create_collection(contest_code)
+# 	collection = db[contest_code]
+# 	link = str(os.getcwd())+'/COOKOFF-dataset/' + contest_code + '.csv'
+# 	flag = 0
+# 	heading = []
+# 	new_row = {}
+# 	with open(link) as csvfile:
+# 		readCSV = csv.reader(csvfile, delimiter=',')
+# 		for row in readCSV:
+# 			if not flag:
+# 				heading = row
+# 				flag = 1
+# 			else:
+# 				for j in range(0, len(row)):	
+# 					new_row[heading[j]] = row[j]
+# 				collections.insert(new_row) 
+		
 # collections = db['user_data']
 
 # collections.delete_one({'_id' : 'hasan_356'})

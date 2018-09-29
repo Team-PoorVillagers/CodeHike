@@ -37,7 +37,7 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 	ranklist = []
 	current_rank_list = []
 	total_names = set()
-	total_names.add(username)
+	total_names.add('*' + username)
 	for row in collections.find():
 			total_names.add(row["username"])
 	for name in total_names:
