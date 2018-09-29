@@ -284,6 +284,7 @@ def end_contest():
     db['user_data'].update_one({'_id': username}, {'$set': {'problems' : list() , 'contest_start_time' : None , 'contest_end_time' : None , 'duration' : None , 'contest_code' : None , 'contest_name' : None , 'v_contest_start_time' : None , 'is_running' : False    ,'submissions' : dict()}})
     return redirect(url_for('main_page'))
 
+app.secret_key = "this is super secret wanna lubba dub dub"
 
 
 if __name__ == "__main__":
