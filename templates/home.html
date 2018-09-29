@@ -21,7 +21,7 @@ function check(form)
     if(Result == true)
     {
     	res = str.match(/\d+/g).map(Number);
-        if(res > 91)
+        if(res > 91 && res < 99)
         {
         	var pp = str.slice(-1);
         	if(pp == 'A' || pp == 'B')
@@ -32,7 +32,7 @@ function check(form)
                	}
             }
         }
-        else if(res >= 1)
+        else if(res >= 1 && res <= 91)
         {
             if(len == 6)
             {
