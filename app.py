@@ -44,8 +44,6 @@ def do_login():
 def logout():
     session['logged_in'] = False
     session.clear()
-    open('session.py', 'w').close()
-    open('submissions.json', 'w').close()
     return main_page()
 
 @app.route("/aboutus")
@@ -254,7 +252,6 @@ def add_friend():
     data = data.json()
     isvalid = False
     if(data['result']['data']['code'] == 9001):
-        isvalid = True    
         fullname = data['result']['data']['content']['fullname']
         friends = user_data['friends']
         if [name,fullname] not in friends and name not in [username]:
