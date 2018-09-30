@@ -4,6 +4,12 @@
 
 
 {% block header %}
+
+    {% if is_running %}
+          <a class="btn btn-info btn-lg" href="/" role="button"> Go to Contest</a>
+    {% else %}
+          
+    {% endif %}
     
     <h1 class="align-this"><strong>About Us!</strong></h1>
     <p class="align-this">We both are final year student from National Institute of Technology, Durgapur.<br>

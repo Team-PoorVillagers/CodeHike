@@ -47,7 +47,10 @@ def logout():
 
 @app.route("/aboutus")
 def aboutus():
-    return render_template("aboutus.html")
+    username = session['username']
+    user_data = db['user_data'].find_one({'_id':username})
+    is_running = user_data['is_running']
+    return render_template("aboutus.html", is_running = is_running)
 
 
 @app.route("/friends")
