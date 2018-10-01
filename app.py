@@ -32,6 +32,7 @@ def do_login():
     auth_token = request.args.get("code")
     x = verify_login(auth_token)
     if (x == True):
+        session.permanent = True
         session['logged_in'] = True
         # get_my_details()
     else:
@@ -47,10 +48,13 @@ def logout():
 
 @app.route("/aboutus")
 def aboutus():
-    username = session['username']
-    user_data = db['user_data'].find_one({'_id':username})
-    is_running = user_data['is_running']
-    return render_template("aboutus.html", is_running = is_running)
+    try:
+        username = session['username']
+        user_data = db['user_data'].find_one({'_id':username})
+        is_running = user_data['is_running']
+        return render_template("aboutus.html", is_running = is_running)
+    except:
+        return render_template("aboutus.html", is_running = False)
 
 
 @app.route("/friends")

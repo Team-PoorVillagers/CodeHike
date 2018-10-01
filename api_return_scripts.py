@@ -209,7 +209,7 @@ def fetch_submission():
 	data = requests.get(url = url , headers = headers)
 	# print(data)	
 	parsed = data.json()
-	# print(parsed)
+	print(parsed)
 	if parsed['result']['data']['code'] == 9001:
 		
 		for row in parsed['result']['data']['content']:

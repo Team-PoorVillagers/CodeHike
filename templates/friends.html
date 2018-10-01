@@ -8,16 +8,6 @@
   <h4>Add Friends</h4>
   <p>You will be able to see their Ranks in seperate category in <a href="/standings">Leaderboard</a></p>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-
   <form class="form-inline" action="/add_friend" method="GET">
     <div class="form-group mx-sm-3 mb-2">
       <label for="inputPassword2" class="sr-only">Enter username</label>
