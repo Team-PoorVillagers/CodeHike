@@ -52,7 +52,7 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 			user[problem] = 0
 			user[problem+"Time"] = 0
 		ranklist.append(user)
-	for row in collections.find():
+	for row in collections.find().sort('id'):
 		time_diff1 = diff(start_time , current_time)
 		time_diff2 = diff(original_start_time , row["date"])
 		if time_diff2 > time_diff1:
@@ -131,7 +131,7 @@ def dashboard(contest_code , problems_list, original_start_time , start_time , c
 		p['total'] = 0
 		p['accuracy'] = 0
 		submission.append(p)
-	for row in collections.find():
+	for row in collections.find().sort('id'):
 		time_diff1 = diff(start_time , current_time)
 		time_diff2 = diff(original_start_time , row["date"])
 		if time_diff2 > time_diff1:

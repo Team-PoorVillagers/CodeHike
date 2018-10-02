@@ -1,10 +1,13 @@
 import pymongo, os
 import csv
 
+passw = os.environ['DB_PASSKEY']
+
 #passw = os.environ['DB_PASSKEY']
 # ADD URI STRING HERE #################################
 
-#uri_string =  ""
+# uri_string =  ""
+
 
 #########################################################
 
