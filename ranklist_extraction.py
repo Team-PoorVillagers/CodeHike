@@ -57,9 +57,9 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 		time_diff2 = diff(original_start_time , row["date"])
 		if time_diff2 > time_diff1:
 			continue
-		username = row["username"]
+		name = row["username"]
 		for i in range(0,len(ranklist)):
-			if ranklist[i]['name'] == username:
+			if ranklist[i]['name'] == name:
 				ranklist[i]['entry'] = True
 				if row["result"] == "AC" and ranklist[i][row["problemCode"]] <= 0:
 					ranklist[i][row["problemCode"]] = 1 + (ranklist[i][row["problemCode"]] * (-1))
@@ -136,9 +136,9 @@ def dashboard(contest_code , problems_list, original_start_time , start_time , c
 		time_diff2 = diff(original_start_time , row["date"])
 		if time_diff2 > time_diff1:
 			continue
-		username = row["username"]
+		name = row["username"]
 		for i in range(0,len(user_submissions)):
-			if user_submissions[i]['name'] == username:
+			if user_submissions[i]['name'] == name:
 				if row["result"] == "AC" and user_submissions[i][row["problemCode"]] <= 0:
 					user_submissions[i][row["problemCode"]] = 1 + (user_submissions[i][row["problemCode"]] * (-1))
 				elif user_submissions[i][row["problemCode"]]<=0:
