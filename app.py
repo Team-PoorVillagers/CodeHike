@@ -15,6 +15,7 @@ def main_page():
             app_data = field[0]
             return render_template("home-no-login.html", client_id = app_data["client_id"], redirect_uri = app_data["redirect_uri"])
         else :
+            activate_access_token()
             username = session['username']
             user_data = db['user_data'].find_one({'_id':username})
             v_contest_start_time = user_data['v_contest_start_time']
@@ -58,6 +59,7 @@ def logout():
 @app.route("/aboutus")
 def aboutus():
     try:
+        activate_access_token()
         username = session['username']
         user_data = db['user_data'].find_one({'_id':username})
         is_running = user_data['is_running']
@@ -69,6 +71,7 @@ def aboutus():
 @app.route("/friends")
 def friends():
     try:
+        activate_access_token()
         display_contest_code = True
         username = session['username']
         user_data = db['user_data'].find_one({'_id':username})
@@ -92,6 +95,7 @@ def friends():
 @app.route("/contestpage/<contest_code>")
 def contest_page(contest_code):
     try:
+        activate_access_token()
         username = session['username']
         user_data = db['user_data'].find_one({'_id':username})
         v_contest_start_time = user_data['v_contest_start_time']
@@ -123,6 +127,7 @@ def contest_page(contest_code):
 @app.route("/standings", methods=['GET'])
 def current_standing():
     try:
+        activate_access_token()
         username = session['username']
         user_data = db['user_data'].find_one({'_id':username})
         v_contest_start_time = user_data['v_contest_start_time']
@@ -174,6 +179,7 @@ def current_standing():
 @app.route("/problem/<contest_code>/<problem_code>")
 def problem_details(contest_code, problem_code):
     try:
+        activate_access_token()
         username = session['username']
         user_data = db['user_data'].find_one({'_id':username})
         v_contest_start_time = user_data['v_contest_start_time']
@@ -210,6 +216,7 @@ def problem_details(contest_code, problem_code):
 @app.route("/contest_welcome", methods=['GET'])
 def welcome_page():
     try:
+        activate_access_token()
         username = session['username']
         contest_code = request.args.get("contestcode")
         contest_code = contest_code.upper()
@@ -255,6 +262,7 @@ def welcome_page():
 def begin_contest():
 
     try:
+        activate_access_token()
         contest_code = request.form['contestcode']
         v_contest_start_time = str(datetime.datetime.now())
         
@@ -272,7 +280,7 @@ def begin_contest():
 @app.route("/add_friend" , methods = ['GET'])
 def add_friend():
     try:
-        
+        activate_access_token()
         username = session['username']
         user_data = db['user_data'].find_one({'_id':username})
         headers = {
@@ -304,6 +312,7 @@ def add_friend():
 def delete_friend():
 
     try:
+        activate_access_token()
         username = session['username']
         user_data = db['user_data'].find_one({'_id':username})
         name = request.args.get('username')
@@ -322,6 +331,7 @@ def delete_friend():
 @app.route("/compare", methods=['GET'])
 def compare():
     try:
+        activate_access_token()
         compare_with = request.args.get("compare_with")
         contestcode = request.args.get("contestcode")
 
@@ -338,6 +348,7 @@ def compare():
 def end_contest():
 
     try:
+        activate_access_token()
         username = session['username']
         user_data = db['user_data'].find({'_id':username})
         db['user_data'].update_one({'_id': username}, {'$set': {'problems' : list() , 'contest_start_time' : None , 'contest_end_time' : None , 'duration' : None , 'contest_code' : None , 'contest_name' : None , 'v_contest_start_time' : None , 'is_running' : False    ,'submissions' : dict()}})

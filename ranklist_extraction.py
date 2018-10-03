@@ -84,6 +84,9 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 	for val in ranklist:
 		if val['entry'] == True:
 			if is_friends:
+				virtual_name = val['name']
+				if val['name'][0] == '*':
+					virtual_name = val['name'][1:]
 				if val['name'] in friends or val['name'] == username:
 					if val['Total']!=prev_score:
 						cnt+=1
