@@ -78,7 +78,13 @@
   <tbody>
   {% for key in obj %}  
     <tr class="table-light">
-    <th scope="row"><a href="/problem/{{ contest_code }}/{{ key.problem_name }}">{{ key.problem_name }}</a></th>
+    {% if friend[key.problem_name] > 0 %}
+      <th scope="row"><a href="/problem/{{ contest_code }}/{{ key.problem_name }}">{{ key.problem_name }}&#x2705;</a></th>
+    {% elif friend[key.problem_name] < 0 %}
+      <th scope="row"><a href="/problem/{{ contest_code }}/{{ key.problem_name }}">{{ key.problem_name }}&#x274C;</a></th>
+    {% else %}
+      <th scope="row"><a href="/problem/{{ contest_code }}/{{ key.problem_name }}">{{ key.problem_name }}</a></th>
+    {% endif %}
     <td>{{ key.correct }}</td>
     <td>{{ key.accuracy }}</td>
     <!-- <td>20%</td> -->

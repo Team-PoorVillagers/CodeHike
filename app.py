@@ -119,8 +119,25 @@ def contest_page(contest_code):
         p = tstamp2 - tstamp1
         p = p.total_seconds()
         fetch_submission()
+        obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , time_now , False)
+        username = session['username']
+        user = {}
+        user['rank'] = 0
+        user['name'] = '*' + username
+        user['entry'] = False
+        user['Total Score'] = 0
+        user['Penalty'] = 0
+        user['Total'] = 0
+        for problem in problems:
+            user[problem] = 0
+            user[problem+"Time"] = 0
+        friend = user
+        for val in obj:
+            if val['name'] == '*' + username:
+                friend = val
+                break          
         obj = dashboard(contest_code , problems  , contest_start_time , v_contest_start_time , time_now)
-        return render_template("contestpage.html",contest_code = contest_code, name = contest_name, mins = duration, problems = problems , obj = obj , time = p, username = username, contest_code_display = True)
+        return render_template("contestpage.html",contest_code = contest_code, name = contest_name, mins = duration, problems = problems , obj = obj , time = p, username = username, contest_code_display = True , friend = friend)
     except:
         return render_template('error.html')
 
