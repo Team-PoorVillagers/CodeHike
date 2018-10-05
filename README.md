@@ -14,7 +14,7 @@ It will be very helpful for preparation of short contests. Few of the features a
 - You can compare yourself with other people while virtual contest is in play.
 - Video Tutorial to Use WebApp : [Video link](https://drive.google.com/file/d/1gWXbUoU-yJK3NUkPO--LcB2_d_7aOZY1/view?usp=sharing) (Just a short 12 min video, you can watch at 1.5x :P)
 
-Slides for better understanding of App: [Slides](https://docs.google.com/presentation/d/1pY5egzHQp-wdqPZP5a9booA7QRfu0frSLaXEnb-2Qmk/edit?usp=sharing)(We both are very poor in making slides, we apologize beforehand _/\_)
+Slides for better understanding of App: [Slides](https://docs.google.com/presentation/d/1pY5egzHQp-wdqPZP5a9booA7QRfu0frSLaXEnb-2Qmk/edit?usp=sharing)(We both are very poor in making slides, we apologize beforehand _/\\\_)
 
 Note : Judgement result takes a while to reflect in standings as Codechef restricts no. of API requests in a min.(6 calls/min), just refresh the page in a while.
 
