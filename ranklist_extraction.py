@@ -8,12 +8,28 @@ import math
 from db_conn import db
 from flask import session
 def diff(t1 , t2):
+
+
+	"""
+	Get time difference between two time stamp in seconds
+	Args : Two time stamps
+	Returns : Time Difference in seconds.
+	
+	""" 
 	fmt = '%Y-%m-%d %H:%M:%S'
 	tstamp1 = datetime.strptime(str(t1), fmt)
 	tstamp2 = datetime.strptime(str(t2), fmt)
 	p = tstamp2 - tstamp1
 	return p.total_seconds()
 def convert(t):
+
+	"""
+	Converts given no. of seconds to HH:MM:SS format
+	Args : time in seconds
+	Returns : String in HH:MM:SS format.
+	
+	"""
+
 	t = int(t)
 	hour = t//3600
 	t%=3600
@@ -23,6 +39,14 @@ def convert(t):
 	return str(hour)+":"+str(mint)+":"+str(sec)
 
 def ranking(contest_code , problems_list , original_start_time , start_time , current_time , is_friends):
+
+	"""
+	Represent the leaderboard in that time  showing rank , score , total penalty and penalty of each problem with respect to the original start time
+	Args : contest_code , problems_list , original start time of the contest , start time of the virtual contest , 
+	current time of the virtual contest , whether friends leaderboard or global leaderboard
+	Returns : List contains usernames ,total score , total penalty and the penalty of each problem sorted by rank
+
+	"""
 
 	contest_code = contest_code.upper()
 	username = session['username']
@@ -113,6 +137,14 @@ def ranking(contest_code , problems_list , original_start_time , start_time , cu
 
 def dashboard(contest_code , problems_list, original_start_time , start_time , current_time):
 
+	"""
+	Represent the dashboard in that time showing total correct submission , accuracy and status of the problem with respect to the original start time
+	Args : contest_code , problems_list , original start time of the contest , start time of the virtual contest , current time of the virtual contest 
+	Returns : List contains problem_names ,correct_submissions , accuracy.
+
+	"""
+
+
 	contest_code = contest_code.upper()
 	# link = str(os.getcwd())+'/COOKOFF-dataset/' + contest_code + '.csv'
 	collections = db[contest_code]
@@ -154,14 +186,5 @@ def dashboard(contest_code , problems_list, original_start_time , start_time , c
 					submission[i]['correct']+=1
 				submission[i]['total']+=abs(val[problems_list[i]])
 				submission[i]['accuracy'] = str(round((submission[i]['correct']/submission[i]['total'])*100 , 2))
-		# for i in range(0,len(submission)):
-		# 	if submission[i]['problem_name'] == row["problemCode"]:
-		# 		if row["result"] == 'AC':
-		# 			submission[i]['correct']+=1
-		# 		submission[i]['total']+=1
-		# 		submission[i]['accuracy'] = str(round((submission[i]['correct']/submission[i]['total'])*100 , 2))
-	# json_file = json.dumps(submission , indent = 4)
-	# print(json_file)
+		
 	return submission
-# ranking('COOK01' , problems , '2010-07-24 21:30:00' , '2018-09-17 16:40:00' , '2018-09-17 16:53:00')
-# dashboard('2018-06-17 21:30:00' , '2018-06-17 21:45:00')

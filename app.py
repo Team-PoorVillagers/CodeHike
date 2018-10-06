@@ -124,6 +124,13 @@ def contest_page(contest_code):
         p = p.total_seconds()
         fetch_submission()
         obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , time_now , False)
+
+        '''
+        Fetches the user details to display the status of the problems 
+        in the dashboard . Green tick for correct answer , red cross for wrong answer 
+
+        '''
+
         username = session['username']
         user = {}
         user['rank'] = 0
@@ -186,6 +193,13 @@ def current_standing():
         for problem in problems:
             user[problem] = 0
             user[problem+"Time"] = 0
+
+        '''
+
+        Fetching the user details to show seperately in the ranklist on the top
+
+        '''
+
         friend = user
         for val in obj:
             if val['name'] == '*' + username:
@@ -220,19 +234,6 @@ def problem_details(contest_code, problem_code):
 
         return render_template('error.html')
 
-# @app.route("/clock")
-# def timer():
-#     from session import problems,v_contest_start_time,contest_start_time,duration
-#     time_now = time_slice(datetime.now())
-#     end_time = v_contest_start_time + datetime.timedelta(minutes = int(duration))
-#     end_time = time_slice(end_time)
-#     fmt = '%Y-%m-%d %H:%M:%S'
-#     tstamp1 = datetime.strptime(time_now , fmt)
-#     tstamp2 = datetime.strptime(end_time, fmt)
-#     print(tstamp1 , tstamp2)
-#     p = tstamp2 - tstamp1
-#     p = p.total_seconds()
-#     return render_template("timer.html" , time = p)
 
 @app.route("/contest_welcome", methods=['GET'])
 def welcome_page():
@@ -256,20 +257,6 @@ def welcome_page():
 
         db['user_data'].update_one({'_id': username}, {'$set': {'problems' : obj['problems'] , 'contest_start_time' : s_d , 'contest_end_time' : e_d , 'duration' : duration , 'contest_code' : contest_code , 'contest_name' : contest_name , 'submissions' : submissions}})
 
-        # with open('session.py', "w+") as file:
-        #     file.write("problems = [ ")
-        #     for i in obj['problems']:
-        #         submissions[i] = []
-        #         file.write("'"+i+"'")
-        #         file.write(" , ")
-        #     file.write(" ] \n")
-        #     file.write("contest_start_time = '"+str(s_d)+"'\n")
-        #     file.write("contest_end_time = '"+str(e_d)+"'\n")
-        #     file.write("duration = '"+str(duration)+"'\n")
-        #     file.write("contest_code = '"+str(contest_code)+"'\n")
-        #     file.write("contest_name = '"+str(contest_name)+"'\n")
-        # file.close()
-
 
         return render_template("contest_welcome.html" ,contest_code = contest_code,\
          name = obj['name'], mins = duration, s_d = s_d, e_d = e_d , username = username ,contest_code_display = False )
@@ -286,10 +273,6 @@ def begin_contest():
         activate_access_token()
         contest_code = request.form['contestcode']
         v_contest_start_time = str(datetime.datetime.now())
-        
-        # with open('session.py', "a") as file:
-        #     file.write("v_contest_start_time = '"+v_contest_start_time+"'\n")
-
         username = session['username']
         db['user_data'].update_one({'_id': username}, {'$set': {'v_contest_start_time': v_contest_start_time , 'is_running' : True}})
         return redirect(url_for('contest_page',contest_code = contest_code, username = username, contest_code_display = True))
