@@ -4,8 +4,12 @@ from ranklist_extraction import ranking,dashboard
 from api_return_scripts import *
 import json
 import os
-app = Flask(__name__)
 
+
+#loader Check
+from flask import render_template_string
+
+app = Flask(__name__)
 
 @app.route("/")
 def main_page():
