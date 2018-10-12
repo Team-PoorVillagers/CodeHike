@@ -4,7 +4,7 @@
 This Web app lets you play Codechef Contests as virtual contests.  
 It feels just like a real contest with real contestants competing alongside with the participant who participate a virtual contest.
 
-WebApp is hosted at - [http://149.129.139.179](http://149.129.139.179)   
+WebApp is hosted at - [http://149.129.145.244](http://149.129.145.244)   
 
 It will be very helpful for preparation of short contests. Few of the features are :
 
