@@ -11,12 +11,12 @@ from db_conn import db
 
 
 def time_slice(t):
-	'''
-	Removes Miliseconds from Python time stamp
-	Ex - 11:07:23.1323232 --> 11:07:23
-	Args : A time stamp
-	Returns : Clean Time stamp
-	'''	
+	
+	#Removes Miliseconds from Python time stamp
+	#Ex - 11:07:23.1323232 --> 11:07:23
+	#Args : A time stamp
+	#Returns : Clean Time stamp
+	
     t = str(t)
     return t[:-7]
 
@@ -26,13 +26,11 @@ def diff(t1 , t2):
 	return p.total_seconds()
 
 def diff1(t1 , t2):
-	'''
-	Get time difference between two time stamp in seconds
 
-	Args : Two time stamps
-
-	Returns : Time Difference in seconds.
-	''' 
+	#Get time difference between two time stamp in seconds
+	#Args : Two time stamps
+	#Returns : Time Difference in seconds.
+	
 	fmt = '%Y-%m-%d %H:%M:%S'
 	tstamp1 = datetime.datetime.strptime(str(t1), fmt)
 	tstamp2 = datetime.datetime.strptime(str(t2), fmt)
@@ -40,13 +38,11 @@ def diff1(t1 , t2):
 	return p.total_seconds()
 
 def convert(t):
-	'''
-	Converts given no. of seconds to HH:MM:SS format
 
-	Args : time in seconds
-
-	Returns : String in HH:MM:SS format.
-	'''
+	#Converts given no. of seconds to HH:MM:SS format
+	#Args : time in seconds
+	#Returns : String in HH:MM:SS format.
+	
 	t = int(t)
 	hour = t//3600
 	t%=3600
@@ -56,14 +52,12 @@ def convert(t):
 	return str(hour)+":"+str(mint)+":"+str(sec)
 
 def activate_access_token():
-	'''
-	Checks whether the access token has expired or not, 
-	If expired then calls get_access_token() 
+	
+	#Checks whether the access token has expired or not, 
+	#If expired then calls get_access_token() 
+	#Args : None
+	#Returns : None
 
-	Args : None
-
-	Returns : None
-	'''
 	username = session['username']
 	user_data = db['user_data'].find_one({'_id':username})
 	if(user_data['generated_on'] != ""):
@@ -80,13 +74,11 @@ def activate_access_token():
 		get_access_token()
 
 def get_access_token():
-	'''
-	Updates Access Token and Refresh Token by making a API call.
 
-	Args: None
-
-	Returns : None 
-	'''
+	#Updates Access Token and Refresh Token by making a API call.
+	#Args: None
+	#Returns : None 
+	
 	field = db['app_data'].find()
 	app_data = field[0]
 
@@ -118,13 +110,11 @@ def get_access_token():
 
 
 def verify_login(auth_token):
-	'''
-	Verifies User Login, If true then stores Username, Access Token, refresh token in DB
-
-	Args : Auth Token
-
-	Returns : True when Successfull else False
-	'''
+	
+	#Verifies User Login, If true then stores Username, Access Token, refresh token in DB
+	#Args : Auth Token
+	#Returns : True when Successfull else False
+	
 	field = db['app_data'].find()
 	app_data = field[0]
 
@@ -155,14 +145,12 @@ def verify_login(auth_token):
 
 
 def return_contest_details(contest_code):
-	'''
-	This function returns name, startdate, enddate of given contest
-	using it's contest code.
-
-	Input :	A contest code in string datatype.
-
-	Output : A json variable with values.
-	'''
+	
+	#This function returns name, startdate, enddate of given contest
+	#using it's contest code.
+	#Input :	A contest code in string datatype.
+	#Output : A json variable with values.
+	
 	username = session['username']
 	user_data = db['user_data'].find_one({'_id':username})
 
@@ -190,14 +178,11 @@ def return_contest_details(contest_code):
 
 
 def return_problem_details(contest_code, problem_code):
-	'''
-	Get Problem Details such as Name, Time limit, Sizelimit, problem statement
-
-	Args : Contest code and Problem Code
-
-	Returns : A JSON object containing required value.
-
-	'''
+	
+	#Get Problem Details such as Name, Time limit, Sizelimit, problem statement
+	#Args : Contest code and Problem Code
+	#Returns : A JSON object containing required value.
+	
 	activate_access_token()
 	username = session['username']
 	user_data = db['user_data'].find_one({'_id':username})
@@ -219,13 +204,11 @@ def return_problem_details(contest_code, problem_code):
 
 
 def get_my_details(access_token):
-	'''
-	Get Username of Logged-In User
-
-	Args: Access Token
 	
-	Returns : Username
-	'''
+	#Get Username of Logged-In User
+	#Args: Access Token
+	#Returns : Username
+	
 	url = "https://api.codechef.com/users/me"	
 	headers = {	
 	'content-type': 'application/json',
@@ -238,16 +221,14 @@ def get_my_details(access_token):
 
 
 def fetch_submission():
-	'''
-	Fetch Submission of LoggedIn User.
-	This function is used to get submission data of user while virtual contest is running.
-	It checks whether submission to problems in Virtual contest is done within the start-end time of virtual 
-	contest.
-
-	Args : None
-
-	Returns : None
-	'''
+	
+	#Fetch Submission of LoggedIn User.
+	#This function is used to get submission data of user while virtual contest is running.
+	#It checks whether submission to problems in Virtual contest is done within the start-end time of virtual 
+	#contest.
+	#Args : None
+	#Returns : None
+	
 	fmt = '%Y-%m-%d %H:%M:%S'
 	username = session['username']
 	user_data = db['user_data'].find_one({'_id':username})
@@ -299,14 +280,12 @@ def fetch_submission():
 						db['user_data'].update_one({'_id': username}, {'$set': {'submissions': submissions}})
 
 def compare_results(compare_with, contestcode , curr_time):
-	'''
-	Compares progress of given user with logged in user on 
-	parameter such as language, time, panelty
-
-	Args : username_to_compare_with, contest code and curr time
-
-	Returns : Dictionary contaning required values
-	'''
+	
+	#Compares progress of given user with logged in user on 
+	#parameter such as language, time, panelty
+	#Args : username_to_compare_with, contest code and curr time
+	#Returns : Dictionary contaning required values
+	
 	username = session['username']
 	user_data = db['user_data'].find_one({'_id':username})
 	v_contest_start_time = user_data['v_contest_start_time']

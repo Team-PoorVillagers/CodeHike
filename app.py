@@ -5,10 +5,6 @@ from api_return_scripts import *
 import json
 import os
 
-
-#loader Check
-from flask import render_template_string
-
 app = Flask(__name__)
 
 @app.route("/")
@@ -125,11 +121,9 @@ def contest_page(contest_code):
         fetch_submission()
         obj = ranking(contest_code , problems , contest_start_time , v_contest_start_time , time_now , False)
 
-        '''
-        Fetches the user details to display the status of the problems 
-        in the dashboard . Green tick for correct answer , red cross for wrong answer 
-
-        '''
+        
+        #Fetches the user details to display the status of the problems 
+        #in the dashboard . Green tick for correct answer , red cross for wrong answer 
 
         username = session['username']
         user = {}
@@ -194,11 +188,7 @@ def current_standing():
             user[problem] = 0
             user[problem+"Time"] = 0
 
-        '''
-
-        Fetching the user details to show seperately in the ranklist on the top
-
-        '''
+        #Fetching the user details to show seperately in the ranklist on the top
 
         friend = user
         for val in obj:
