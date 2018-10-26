@@ -8,7 +8,7 @@ WebApp is hosted at - [http://149.129.145.244](http://149.129.145.244)
 
 It will be very helpful for the preparation of short contests. Few of the features are :
 
-- You can add friends and see their separate rank list during the live virtual contest.
+- adding colleagues and viewing their positions.
 - Several people can play the virtual contest together and see each other's ranking.
 - All COOKOFF's starting from COOK01 to recent COOK98A/B are available to play as a virtual contest.
 - You can compare yourself with other people while the virtual contest is in play.
