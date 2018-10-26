@@ -8,7 +8,7 @@ from db_conn import production
 
 app = Flask(__name__)
 
-@app.route("/") 
+@app.route('/') 
 def main_page():
     try:
         if not session.get('logged_in'):
