@@ -4,15 +4,15 @@ from ranklist_extraction import ranking,dashboard
 from api_return_scripts import *
 import json
 import os
+from db_conn import production
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/") 
 def main_page():
     try:
         if not session.get('logged_in'):
-            field = db['app_data'].find()
-            app_data = field[0]
+            app_data = db['app_data'].find_one({"production": production})
             return render_template("home-no-login.html", client_id = app_data["client_id"], redirect_uri = app_data["redirect_uri"])
         else :
             activate_access_token()

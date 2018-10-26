@@ -1,12 +1,11 @@
 import pymongo, os
 import csv
 
-# Set Password in Environment Variable named 'DB_PASSKEY' 
-passw = os.environ['DB_PASSKEY']
-
 # ADD URI STRING HERE #################################
+# set production False, if you want to contribute to this repo and make changes
+production = True
 
-# uri_string =  ""
+uri_string =  ""
 
 #########################################################
 

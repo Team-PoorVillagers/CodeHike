@@ -3,11 +3,10 @@ import json
 import datetime
 import csv
 import os
-from db_conn import db
+from db_conn import db, production
 
 from flask import session
-
-from db_conn import db
+from db_conn import db, production
 
 
 def time_slice(t):
@@ -79,8 +78,7 @@ def get_access_token():
 	#Args: None
 	#Returns : None 
 	
-	field = db['app_data'].find()
-	app_data = field[0]
+	app_data = db['app_data'].find_one({"production": production})
 
 	username = session['username']
 	user_data = db['user_data'].find_one({'_id':username})
@@ -115,8 +113,7 @@ def verify_login(auth_token):
 	#Args : Auth Token
 	#Returns : True when Successfull else False
 	
-	field = db['app_data'].find()
-	app_data = field[0]
+	app_data = db['app_data'].find_one({"production": production})
 
 	url = 'https://api.codechef.com/oauth/token'
 	login_headers = {'content-Type': 'application/json',}
