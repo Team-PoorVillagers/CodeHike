@@ -15,14 +15,14 @@
   console.log(timeleft)
 
   function convertSeconds(s) {
-    var min = floor(s / 60);
-    var sec = s % 60;
+    let min = floor(s / 60);
+    let sec = s % 60;
     return nf(min, 2) + ':' + nf(sec, 2);
   }
 
 
   function setup() {
-    var timer  = select('#timer');
+    let timer  = select('#timer');
     // startTime = millis();
 
      //   var params = getURLParams();

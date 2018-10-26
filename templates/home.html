@@ -8,14 +8,14 @@
 <script>
 function check(form) 
 	{
-    var str = form.contestcode.value;
+    let str = form.contestcode.value;
     str = str.toUpperCase();
     //alert(str);
-    var coderegex = /^COOK[0-9][0-9](A|B)?$/;
+    let coderegex = /^COOK[0-9][0-9](A|B)?$/;
     Result = coderegex.test(str);
     
-    var flag = 0;
-    var len = str.length;
+    let flag = 0;
+    let len = str.length;
     //alert(Result);
     //alert(len);
     if(Result == true)
@@ -23,7 +23,7 @@ function check(form)
     	res = str.match(/\d+/g).map(Number);
         if(res > 91 && res < 99)
         {
-        	var pp = str.slice(-1);
+        	let pp = str.slice(-1);
         	if(pp == 'A' || pp == 'B')
             {
             	if(len == 7)
