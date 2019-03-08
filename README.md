@@ -3,6 +3,7 @@
 
 This Web app lets you play Codechef Contests as virtual contests.  
 It feels just like a real contest with real contestants competing alongside with the participants who participate a virtual contest.
+UPD: We won 2nd prize. :D [Ranking](https://www.codechef.com/rankings/CAH2018)
 
 WebApp is hosted at - [~~http://149.129.145.244~~](http://149.129.145.244) (not anymore, since Codechef made their API private) 
 
