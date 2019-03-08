@@ -36,3 +36,18 @@ Note: Judgement result takes a while to reflect in standings as Codechef restric
 
 ---
 Developed during [Codechef API Hackathon](https://www.codechef.com/CAH1801) by [Hasan Alirajpurwala](https://github.com/hasan356) and [Vishvanath Dutt Sharma](https://github.com/vishvanath45)
+
+## System Architecture 
+
+![](https://i.imgur.com/qTSPtvN.png)
+
+## ScreenShots 
+
+![](https://i.imgur.com/dJPgnxh.png)
+![](https://i.imgur.com/GHtIkFw.png)
+![](https://i.imgur.com/wKKxW1n.png)
+![](https://i.imgur.com/iV32qbw.png)
+![](https://i.imgur.com/VnGbsxk.png)
+![](https://i.imgur.com/cQJeL9P.png)
+![](https://i.imgur.com/NJ8wZJc.png)
+
