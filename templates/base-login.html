@@ -16,6 +16,7 @@
     <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.js"></script>
   <!-- <script language="javascript" type="text/javascript" src="sketch.js"></script> -->
     <link rel="icon" type="image/png" href="/static/images/cvc-icon.ico">
+    <link rel="stylesheet" href="/static/css/popup.css">
 </head>
 
 <body>
@@ -41,7 +42,7 @@
         <a class="nav-link" href="/standings">Current Leaderboard</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/end_contest"><b><em>End Contest</em></b></a>
+        <button type="button" class="btn btn-danger" href="#myModal" data-toggle = "modal" ><b><em>End Contest</em></b></button>
       </li>
       {% else %}
 
@@ -61,9 +62,21 @@
     </ul> 
   </div>
 </nav>
-
+<div id="myModal" class="modal fade">
+  <div class="modal-dialog modal-confirm">
+    <div class="modal-content">
+      <div class="modal-header">       
+        <h4 class="modal-title">Are you sure about ending contest here?</h4>  
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button"class="btn btn-info" data-dismiss="modal">Cancel</button>&emsp;&emsp;&emsp;&emsp;&emsp;
+        <button type="button" class="btn btn-danger" onclick="location.href='/end_contest'">Confirm!!</button>
+      </div>
+    </div>
+  </div>
+</div> 
 <div class="jumbotron">
-
   {% block header %}{% endblock %}
 
   <hr class="my-4">
