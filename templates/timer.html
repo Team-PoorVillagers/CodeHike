@@ -16,8 +16,8 @@
 	var currentTime = 0;
 
 	function convertSeconds(s) {
-	  var min = floor(s / 60);
-	  var sec = s % 60;
+	  let min = floor(s / 60);
+	  let sec = s % 60;
 	  return nf(min, 2) + ':' + nf(sec, 2);
 	}
 
@@ -28,10 +28,10 @@
 	// }
 
 	function setup() {
-		var timer  = select('#timer')
+		let timer  = select('#timer')
 		// startTime = millis();
 		if(timeleft<0){
-			timer.html(The contest has ended)
+			timer.html("The contest has ended")
 		}
 		else{
 			timer.html(timeleft - counter)
@@ -42,7 +42,7 @@
 		 //    	timeleft = min * 60;
 		 //  	}
 
-		  	var timer = select('#timer');
+		  	let timer = select('#timer');
 		  	timer.html(convertSeconds(timeleft - currentTime));
 
 		  	// var interval = setInterval(timeIt, 1000);
